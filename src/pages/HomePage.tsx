@@ -1,9 +1,9 @@
+import React, { CSSProperties } from "react";
+
 import Card from "../components/display/Card";
-import TabBar from "../components/display/TabBar";
 import bottom from "../assets/chevron-bottom.svg";
 import { useAllAudio } from "../hooks/useAllAudio";
-
-import React, { CSSProperties } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface FeatureCardProps {
     backgroundColor: string;
@@ -76,10 +76,44 @@ const FeatureCards = () => {
     );
 };
 
-const keyword = ["부모", "아빠", "엄마", "효도", "인생"];
+type Audio = {
+    id: number;
+    title: string;
+    keyword: string[];
+    isStarred: boolean;
+};
+
+type DummyData = {
+    allAudio: Audio[];
+};
+
+const dummy: DummyData = {
+    allAudio: [
+        {
+            id: 0,
+            title: "제목",
+            keyword: ["아빠", "엄마", "효도"],
+            isStarred: true,
+        },
+        {
+            id: 1,
+            title: "제목",
+            keyword: ["아빠", "엄마", "효도"],
+            isStarred: true,
+        },
+        {
+            id: 3,
+            title: "제목",
+            keyword: ["아빠", "엄마", "효도"],
+            isStarred: true,
+        },
+    ],
+};
 
 function MainPage() {
     const { isLoading, isError, allAudio } = useAllAudio();
+
+    const navigate = useNavigate();
 
     return (
         <div className="pb-10">
@@ -92,15 +126,18 @@ function MainPage() {
 
             {isLoading && <div>Loading...</div>}
             {isError && <div>오류가 발생했습니다.</div>}
-            {allAudio && allAudio}
-            <Card keyword={keyword}>문쌤의 강의</Card>
-            <Card keyword={keyword}>문쌤의 강의</Card>
-            <Card keyword={keyword}>문쌤의 강의</Card>
-            <Card keyword={keyword}>문쌤의 강의</Card>
-            <Card keyword={keyword}>문쌤의 강의</Card>
-            <Card keyword={keyword}>문쌤의 강의</Card>
-            <Card keyword={keyword}>문쌤의 강의</Card>
-            <Card keyword={keyword}>문쌤의 강의</Card>
+
+            {dummy.allAudio.map(({ id, title, keyword }: Audio) => (
+                <Card
+                    key={id}
+                    keyword={keyword}
+                    onClick={() =>
+                        navigate(`/recording/${id}`, { state: { id } })
+                    }
+                >
+                    {title}
+                </Card>
+            ))}
         </div>
     );
 }
