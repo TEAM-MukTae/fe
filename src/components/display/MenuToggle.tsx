@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const MenuToggle: React.FC = () => {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
 
     const toggleVariants = {
@@ -63,7 +66,7 @@ const MenuToggle: React.FC = () => {
                     className="flex items-center justify-center mx-3 cursor-pointer bg-primary mb-9"
                     variants={itemVariants}
                 >
-                    <span className="text-white">녹음</span>
+                    <span className="text-white">{t("menuToggle.record")}</span>
                 </motion.div>
                 <motion.div
                     style={{
@@ -77,9 +80,14 @@ const MenuToggle: React.FC = () => {
                     onClick={() => navigate("/upload")}
                 >
                     <span className="text-white">
-                        문제
-                        <br />
-                        생성
+                        {t("menuToggle.createQuiz")
+                            .split("\n")
+                            .map((text, i) => (
+                                <React.Fragment key={i}>
+                                    {text}
+                                    <br />
+                                </React.Fragment>
+                            ))}
                     </span>
                 </motion.div>
             </motion.div>
