@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { useAllAudio } from "../hooks/useAllAudio";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import ToastPopup from "../components/display/ToastPopup";
 import Card from "../components/display/Card";
@@ -44,6 +45,7 @@ const dummy: DummyData = {
 };
 
 export default function UploadPage() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { isLoading, isError, allAudio } = useAllAudio();
 
@@ -83,7 +85,7 @@ export default function UploadPage() {
         event.preventDefault();
 
         if (!fileName) {
-            setToastMessage("파일을 선택하세요.");
+            setToastMessage(t("uploadPage.selectFile"));
             setToast(true);
             return;
         }
@@ -109,7 +111,7 @@ export default function UploadPage() {
                     }`}
                     onClick={() => handleTabClick("audio")}
                 >
-                    녹음 파일
+                    {t("uploadPage.audio")}
                 </button>
                 <button
                     className={`py-2 px-4 text-center flex-1 font-bold ${
@@ -119,7 +121,7 @@ export default function UploadPage() {
                     }`}
                     onClick={() => handleTabClick("file")}
                 >
-                    강의 자료
+                    {t("uploadPage.file")}
                 </button>
             </div>
             <div className="p-4 bg-gray-100">
@@ -146,7 +148,9 @@ export default function UploadPage() {
                         >
                             <img src={upload} alt="upload" className="mr-2" />
                             <span className="font-semibold text-black">
-                                {fileName ? `${fileName}` : "업로드"}
+                                {fileName
+                                    ? `${fileName}`
+                                    : t("uploadPage.upload")}
                             </span>
                         </label>
 
@@ -168,7 +172,7 @@ export default function UploadPage() {
                     height="10px"
                     onClick={handleGenerateQuiz}
                 >
-                    퀴즈 생성하기
+                    {t("uploadPage.generateQuiz")}
                 </Button>
             </div>
         </div>

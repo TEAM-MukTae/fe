@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import Button from "../components/display/Button";
 import { useQuizDetail } from "../hooks/useQuizDetail";
+import { useTranslation } from "react-i18next";
 
 const dummy = {
     questions: [
@@ -52,6 +53,7 @@ function SolvePage() {
     const { isLoading, isError, quizDetail } = useQuizDetail();
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const [correctCount, setCorrectCount] = useState(0);
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -111,7 +113,9 @@ function SolvePage() {
                     ></div>
                 </div>
                 <div className="flex justify-between mt-1 text-sm text-gray-500">
-                    <span>맞힌 문제: {correctCount}</span>
+                    <span>
+                        {t("quiz.correctAnswers")}: {correctCount}
+                    </span>
                     <span>
                         {currentQuestion + 1} / {totalQuestions}
                     </span>
@@ -164,12 +168,13 @@ function SolvePage() {
                             }
                         >
                             {selectedAnswer === question.answer
-                                ? "정답입니다!"
-                                : "오답입니다!"}
+                                ? t("quiz.correct")
+                                : t("quiz.incorrect")}
                         </span>
                         <div className="flex flex-col mt-2">
                             <div className="text-gray-700">
-                                정답: {question.answer + 1}번
+                                {t("quiz.correctAnswer")}: {question.answer + 1}
+                                번
                             </div>
                             <div className="mt-2 text-gray-700">
                                 {question.explanation}
@@ -187,15 +192,15 @@ function SolvePage() {
                         disabled={currentQuestion === 0}
                     >
                         <img src={left} alt="Previous" className="mr-2" />
-                        이전 문제
+                        {t("quiz.previous")}
                     </button>
                     <button
                         className="flex items-center text-primary"
                         onClick={handleNextQuestion}
                     >
                         {currentQuestion === totalQuestions - 1
-                            ? "결과 보기"
-                            : "다음 문제"}
+                            ? t("quiz.showResults")
+                            : t("quiz.next")}
                         <img src={right} alt="Next" className="ml-2" />
                     </button>
                 </div>
@@ -223,7 +228,7 @@ function SolvePage() {
             >
                 <div className="p-5">
                     <div className="text-2xl font-semibold">
-                        수고하셨습니다!
+                        {t("quiz.congratulations")}
                     </div>
                     <div className="mt-4 text-2xl font-bold">
                         {correctCount} / {totalQuestions}
@@ -235,14 +240,14 @@ function SolvePage() {
                             onClick={resetQuiz}
                             className="mr-2"
                         >
-                            다시 풀기
+                            {t("quiz.retry")}
                         </Button>
                         <Button
                             width="20px"
                             height="10px"
                             onClick={() => navigate("/quiz")}
                         >
-                            확인
+                            {t("quiz.confirm")}
                         </Button>
                     </div>
                 </div>

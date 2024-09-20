@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useAudioDetail } from "../hooks/useAudioDetail";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
@@ -78,6 +79,7 @@ type AudioDetail = {
 
 function RecordDetailPage() {
     const location = useLocation();
+    const { t } = useTranslation();
     const { id } = location.state || {};
 
     const [activeTab, setActiveTab] = useState<string>("script");
@@ -102,7 +104,7 @@ function RecordDetailPage() {
                     }`}
                     onClick={() => handleTabClick("script")}
                 >
-                    스크립트
+                    {t("recordDetail.script")}
                 </button>
                 <button
                     className={`py-2 px-4 text-center flex-1 font-bold ${
@@ -112,7 +114,7 @@ function RecordDetailPage() {
                     }`}
                     onClick={() => handleTabClick("summary")}
                 >
-                    요약
+                    {t("recordDetail.summary")}
                 </button>
             </div>
 
@@ -133,7 +135,9 @@ function RecordDetailPage() {
                         ))}
                     </>
                 )}
-                {activeTab === "summary" && <div>요약 준비중...</div>}
+                {activeTab === "summary" && (
+                    <div>{t("recordDetail.summaryPreparing")}</div>
+                )}
             </div>
 
             <div className="fixed bottom-0 left-0 right-0">

@@ -1,7 +1,7 @@
-import TabBar from "../components/display/TabBar";
 import Card from "../components/display/Card";
 import bottom from "../assets/chevron-bottom.svg";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const dummy = {
     quiz: [
@@ -37,6 +37,8 @@ const dummy = {
 function QuizPage() {
     const navigate = useNavigate();
 
+    const { t } = useTranslation();
+
     const handleCardClick = (quizId: string) => {
         navigate(`/quiz/${quizId}`);
     };
@@ -44,7 +46,7 @@ function QuizPage() {
     return (
         <div className="pt-5 pb-5">
             <div className="flex flex-row items-center justify-end">
-                <div className="mr-2 text-gray-600">최신순</div>
+                <div className="mr-2 text-gray-600">{t("sort_by_latest")}</div>
                 <img src={bottom} />
             </div>
 
