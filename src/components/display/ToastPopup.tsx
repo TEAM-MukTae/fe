@@ -20,7 +20,7 @@ export default function ToastPopup({
 
     return (
         <div
-            className={`fixed z-50 flex h-16 w-[90%] max-w-[73rem] items-center justify-center rounded-lg bg-blue-400 opacity-97 shadow-md ${
+            className={`fixed z-50 flex h-16 w-[90%] max-w-[73rem] items-center justify-center rounded-lg bg-secondary opacity-97 shadow-md ${
                 position === "top"
                     ? "animate-toast-top top-4"
                     : "animate-toast-bottom bottom-4"
