@@ -102,7 +102,7 @@ function SolvePage() {
     const progress = ((currentQuestion + 1) / totalQuestions) * 100;
 
     return (
-        <div className="flex flex-col p-2 pb-16">
+        <div className="flex flex-col p-2 pt-10 pb-16">
             <div className="mb-4">
                 <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                     <div
