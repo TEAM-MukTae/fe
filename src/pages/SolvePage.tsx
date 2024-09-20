@@ -102,7 +102,7 @@ function SolvePage() {
     const progress = ((currentQuestion + 1) / totalQuestions) * 100;
 
     return (
-        <div className="flex flex-col min-h-screen p-2">
+        <div className="flex flex-col p-2 pb-16">
             <div className="mb-4">
                 <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                     <div
@@ -118,7 +118,7 @@ function SolvePage() {
                 </div>
             </div>
 
-            <div className="flex-grow">
+            <div>
                 <Card>
                     <div className="mb-4 text-lg font-semibold">
                         {currentQuestion + 1}. {question.query}
@@ -179,24 +179,26 @@ function SolvePage() {
                 )}
             </div>
 
-            <div className="flex items-center justify-between py-4 mt-auto">
-                <button
-                    className="flex items-center text-gray-500"
-                    onClick={handlePreviousQuestion}
-                    disabled={currentQuestion === 0}
-                >
-                    <img src={left} alt="Previous" className="mr-2" />
-                    이전 문제
-                </button>
-                <button
-                    className="flex items-center text-primary"
-                    onClick={handleNextQuestion}
-                >
-                    {currentQuestion === totalQuestions - 1
-                        ? "결과 보기"
-                        : "다음 문제"}
-                    <img src={right} alt="Next" className="ml-2" />
-                </button>
+            <div className="fixed bottom-0 left-0 right-0 w-full p-4">
+                <div className="flex items-center justify-between mx-auto">
+                    <button
+                        className="flex items-center text-gray-500"
+                        onClick={handlePreviousQuestion}
+                        disabled={currentQuestion === 0}
+                    >
+                        <img src={left} alt="Previous" className="mr-2" />
+                        이전 문제
+                    </button>
+                    <button
+                        className="flex items-center text-primary"
+                        onClick={handleNextQuestion}
+                    >
+                        {currentQuestion === totalQuestions - 1
+                            ? "결과 보기"
+                            : "다음 문제"}
+                        <img src={right} alt="Next" className="ml-2" />
+                    </button>
+                </div>
             </div>
 
             <Modal
