@@ -1,4 +1,5 @@
 import React, { CSSProperties } from "react";
+import { useTranslation } from "react-i18next";
 
 import Card from "../components/display/Card";
 import bottom from "../assets/chevron-bottom.svg";
@@ -28,23 +29,25 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 );
 
 const FeatureCards = () => {
+    const { t } = useTranslation();
+
     const features = [
         {
             backgroundColor: "bg-primary",
-            title: "이제 불편없이",
-            description: "평등하게 학습하세요",
+            title: t("feature_cards.card1.title"),
+            description: t("feature_cards.card1.description"),
             icon: "🦫",
         },
         {
             backgroundColor: "bg-secondary",
-            title: "인공지능 요약으로",
-            description: "학습 효율을 높이세요",
+            title: t("feature_cards.card2.title"),
+            description: t("feature_cards.card2.description"),
             icon: "🤖",
         },
         {
             backgroundColor: "bg-tertiary",
-            title: "기출문제를 통해",
-            description: "복습하세요",
+            title: t("feature_cards.card3.title"),
+            description: t("feature_cards.card3.description"),
             icon: "🗣️",
         },
     ];
@@ -111,6 +114,8 @@ const dummy: DummyData = {
 };
 
 function MainPage() {
+    const { t } = useTranslation();
+
     const { isLoading, isError, allAudio } = useAllAudio();
 
     const navigate = useNavigate();
@@ -120,12 +125,12 @@ function MainPage() {
             <FeatureCards />
 
             <div className="flex flex-row items-center justify-end">
-                <div className="mr-2 text-gray-600">최신순</div>
+                <div className="mr-2 text-gray-600">{t("sort_by_latest")}</div>
                 <img src={bottom} />
             </div>
 
-            {isLoading && <div>Loading...</div>}
-            {isError && <div>오류가 발생했습니다.</div>}
+            {isLoading && <div>{t("loading")}</div>}
+            {isError && <div>{t("error_occurred")}</div>}
 
             {dummy.allAudio.map(({ id, title, keyword }: Audio) => (
                 <Card
