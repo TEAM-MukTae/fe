@@ -1,0 +1,68 @@
+{
+    "name": "fe-codebase",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "@testing-library/jest-dom": "^5.17.0",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/jest": "^27.5.2",
+        "@types/node": "^16.18.108",
+        "@types/react": "^18.3.5",
+        "@types/react-dom": "^18.3.0",
+        "audiomotion-analyzer": "^4.5.0",
+        "axios": "^1.7.7",
+        "framer-motion": "^11.5.4",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-icons": "^5.3.0",
+        "react-modal": "^3.16.1",
+        "react-router-dom": "^6.26.2",
+        "react-scripts": "5.0.1",
+        "react-toastify": "^10.0.5",
+        "typescript": "^4.9.5",
+        "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "lint": "eslint --cache .",
+        "format": "prettier --write .",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "prepare": "husky install"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.10.0",
+        "@types/react-modal": "^3.16.3",
+        "@typescript-eslint/eslint-plugin": "^7.18.0",
+        "@typescript-eslint/parser": "^7.18.0",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-react": "^7.36.0",
+        "globals": "^15.9.0",
+        "husky": "^8.0.0",
+        "prettier": "^3.3.3",
+        "typescript-eslint": "^8.5.0"
+    }
+}
