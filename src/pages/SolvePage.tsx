@@ -102,7 +102,7 @@ function SolvePage() {
     const progress = ((currentQuestion + 1) / totalQuestions) * 100;
 
     return (
-        <div className="flex flex-col p-2 pb-16">
+        <div className="flex flex-col p-2 pt-10 pb-16">
             <div className="mb-4">
                 <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                     <div
@@ -179,7 +179,7 @@ function SolvePage() {
                 )}
             </div>
 
-            <div className="fixed bottom-0 left-0 right-0 w-full p-4">
+            <div className="fixed bottom-0 left-0 right-0 w-full p-4 bg-white">
                 <div className="flex items-center justify-between mx-auto">
                     <button
                         className="flex items-center text-gray-500"

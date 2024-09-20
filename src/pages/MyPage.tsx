@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import profile from "../assets/profile.svg";
 
 const MyPage = () => {
     const [activeTab, setActiveTab] = useState("activity");
 
     return (
-        <div className="max-w-[800px] mx-auto p-5 bg-[#f9f9f9] rounded-[10px] shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
+        <div className="max-w-[800px] mx-auto pt-10 ">
             <div className="flex items-center pb-5 border-b border-[#e0e0e0] mb-5">
                 <img
-                    src="/path-to-profile-image.jpg"
+                    src={profile}
                     alt="Profile"
                     className="w-[80px] h-[80px] rounded-full mr-5"
                 />
