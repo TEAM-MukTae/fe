@@ -11,11 +11,23 @@ const dummy = {
             quizId: 3,
             title: "인공지능 Ch3 퀴즈",
             date: "09.18",
-            starred: false,
+            starred: true,
         },
         {
             quizId: 4,
             title: "인공지능 Ch4 퀴즈",
+            date: "09.18",
+            starred: true,
+        },
+        {
+            quizId: 5,
+            title: "논리회로 Ch1 퀴즈",
+            date: "09.18",
+            starred: false,
+        },
+        {
+            quizId: 6,
+            title: "논리회로 Ch2 퀴즈",
             date: "09.18",
             starred: false,
         },
@@ -30,7 +42,7 @@ function QuizPage() {
     };
 
     return (
-        <div className="pb-10">
+        <div className="pt-10 pb-5">
             <div className="flex flex-row items-center justify-end">
                 <div className="mr-2 text-gray-600">최신순</div>
                 <img src={bottom} />
@@ -41,7 +53,7 @@ function QuizPage() {
                     key={quiz.quizId}
                     keyword={quiz.date}
                     isStarred={quiz.starred}
-                    onClick={() => handleCardClick(`quiz-${quiz.quizId}`)}
+                    onClick={() => handleCardClick(`${quiz.quizId}`)}
                 >
                     {quiz.title}
                 </Card>
