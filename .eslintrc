@@ -1,0 +1,18 @@
+{
+    "extends": ["eslint:recommended", "prettier"],
+    "env": { "browser": true, "node": true, "es6": true },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+        },
+        "ecmaVersion": "latest",
+    },
+    "rules": {
+        "no-var": "error", // var 금지
+        "no-console": "off",
+        "eqeqeq": "error",
+        "no-unused-vars": "off", // Disable unused vars rule
+    },
+}
