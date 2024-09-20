@@ -4,7 +4,12 @@ import TabBar from "../display/TabBar";
 const RootLayout = () => {
     const location = useLocation();
 
-    const hideTabBarRoutes = ["/quiz/:quizId", "/solve", "/recording"];
+    const hideTabBarRoutes = [
+        "/quiz/:quizId",
+        "/solve",
+        "/recording",
+        "/upload",
+    ];
     const shouldHideTabBar = hideTabBarRoutes.some((route) =>
         matchPath(route, location.pathname),
     );
