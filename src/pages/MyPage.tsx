@@ -59,6 +59,12 @@ const MyPage = () => {
                         >
                             中文
                         </button>
+                        <button
+                            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                            onClick={() => changeLanguage("vi")}
+                        >
+                            Tiếng Việt
+                        </button>
                     </div>
                 )}
             </div>
