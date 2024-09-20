@@ -21,10 +21,10 @@ const Card: React.FC<CardProps> = ({
             onClick={onClick}
         >
             <div className="flex items-center">
-                <div className="ml-3">
+                <div>
                     <p className="font-medium text-gray-900">{children}</p>
                     <p className="text-sm text-gray-500">
-                        {/* {keyword?.join(" ")} */}
+                        {keyword ? keyword : ""}
                     </p>
                 </div>
             </div>
