@@ -179,7 +179,7 @@ function SolvePage() {
                 )}
             </div>
 
-            <div className="fixed bottom-0 left-0 right-0 w-full p-4">
+            <div className="fixed bottom-0 left-0 right-0 w-full p-4 bg-white">
                 <div className="flex items-center justify-between mx-auto">
                     <button
                         className="flex items-center text-gray-500"
