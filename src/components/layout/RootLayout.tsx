@@ -8,6 +8,7 @@ const RootLayout = () => {
         "/quiz/:quizId",
         "/solve",
         "/recording",
+        "/recording/:recordingId",
         "/upload",
     ];
     const shouldHideTabBar = hideTabBarRoutes.some((route) =>
