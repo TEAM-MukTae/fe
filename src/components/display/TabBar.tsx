@@ -36,14 +36,13 @@ const TabBar: React.FC = () => {
     };
 
     return (
-        <div className="bg-white shadow-md fixed bottom-0 left-0 right-0 p-2 flex justify-between rounded-t-lg z-10 border-t border-gray-200">
+        <div className="fixed bottom-0 left-0 right-0 z-10 flex justify-between p-2 bg-white border-t border-gray-200 rounded-t-lg shadow-md">
             {showToggles && <MenuToggle />}
             {["홈", "퀴즈", "플러스", "즐겨찾기", "마이"].map((tab) => (
                 <motion.div
                     key={tab}
                     className={`flex flex-col items-center cursor-pointer flex-1 transition-transform duration-200`}
                     onClick={() => handleTabClick(tab)}
-                    whileHover={{ scale: 1.05 }}
                 >
                     {tab === "플러스" ? (
                         <div
@@ -54,7 +53,7 @@ const TabBar: React.FC = () => {
                                 backgroundColor: "white",
                                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
                             }}
-                            className="absolute -top-2 left-1/2 transform -translate-x-1/2 flex items-center justify-center cursor-pointer"
+                            className="absolute flex items-center justify-center transform -translate-x-1/2 cursor-pointer -top-2 left-1/2"
                         >
                             <div
                                 style={{
@@ -62,36 +61,36 @@ const TabBar: React.FC = () => {
                                     height: "40px",
                                     borderRadius: "50%",
                                 }}
-                                className="bg-primary flex items-center justify-center cursor-pointer"
+                                className="flex items-center justify-center cursor-pointer bg-primary"
                             >
-                                <HiPlus className="h-7 w-7 text-white" />
+                                <HiPlus className="text-white h-7 w-7" />
                             </div>
                         </div>
                     ) : (
-                        <motion.div
-                            className={`flex items-center justify-center ${
-                                activeTab === tab
-                                    ? "text-gray-800" // Darker color for active tab
-                                    : "text-gray-400" // Lighter color for inactive tabs
-                            }`}
-                        >
+                        <motion.div className="flex items-center justify-center text-gray-600">
                             {tab === "홈" && (
-                                <FaHome className="h-5 w-5" aria-label="홈" />
+                                <FaHome
+                                    className="w-5 h-5 text-gray-800"
+                                    aria-label="홈"
+                                />
                             )}
                             {tab === "퀴즈" && (
                                 <FaQuestionCircle
-                                    className="h-5 w-5"
+                                    className="w-5 h-5 text-gray-800"
                                     aria-label="퀴즈"
                                 />
                             )}
                             {tab === "즐겨찾기" && (
                                 <FaStar
-                                    className="h-5 w-5"
+                                    className="w-5 h-5 text-gray-800"
                                     aria-label="즐겨찾기"
                                 />
                             )}
                             {tab === "마이" && (
-                                <FaUser className="h-5 w-5" aria-label="마이" />
+                                <FaUser
+                                    className="w-5 h-5 text-gray-800"
+                                    aria-label="마이"
+                                />
                             )}
                         </motion.div>
                     )}
@@ -99,8 +98,8 @@ const TabBar: React.FC = () => {
                         <motion.span
                             className={`text-xs font-semibold transition-colors duration-300 ${
                                 activeTab === tab
-                                    ? "text-gray-800" // Bold for the active tab
-                                    : "text-gray-500" // Gray for inactive tabs
+                                    ? "text-gray-800"
+                                    : "text-gray-500"
                             }`}
                         >
                             {tab}

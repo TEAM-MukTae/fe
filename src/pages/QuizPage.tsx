@@ -42,7 +42,7 @@ function QuizPage() {
     };
 
     return (
-        <div className="pt-10 pb-5">
+        <div className="pt-5 pb-5">
             <div className="flex flex-row items-center justify-end">
                 <div className="mr-2 text-gray-600">최신순</div>
                 <img src={bottom} />
