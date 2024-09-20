@@ -33,7 +33,9 @@ interface SpeechRecognitionAlternative {
 const useSpeechRecognition = () => {
     const [isListening, setIsListening] = useState<boolean>(false);
     const [transcript, setTranscript] = useState<string>("");
+    const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
     const recognitionRef = useRef<SpeechRecognition | null>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null); // Canvas ref for visualizer
 
     useEffect(() => {
@@ -48,37 +50,91 @@ const useSpeechRecognition = () => {
         recognition.continuous = true;
         recognition.interimResults = true; // Enable interim results
 
-        recognition.onresult = (event: SpeechRecognitionEvent) => {
+        recognition.onresult = (_: SpeechRecognitionEvent) => {
             let finalTranscript = "";
-            let interimTranscript = "";
-
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript + " ";
-                } else {
-                    interimTranscript += event.results[i][0].transcript + " "; // Collect interim results
+            for (let i = _.resultIndex; i < _.results.length; i++) {
+                if (_.results[i].isFinal) {
+                    finalTranscript += _.results[i][0].transcript + " ";
                 }
             }
-
-            setTranscript(finalTranscript + interimTranscript); // Update with final and interim transcripts
+            setTranscript((prev) => prev + finalTranscript); // 기존 transcript에 이어서 붙임
         };
-
         recognition.onend = () => {
             setIsListening(false);
         };
-
         recognitionRef.current = recognition;
-
+        // 컴포넌트 언마운트 시 음성 인식 중지 (메모리 누수 방지)
         return () => {
             recognition.stop();
         };
     }, []);
+    useEffect(() => {
+        if (!("webkitSpeechRecognition" in window)) {
+            alert("이 브라우저는 Web Speech API를 지원하지 않습니다.");
+            return;
+        }
 
-    const startListening = useCallback(() => {
+        const recognition = new (
+            window as any
+        ).webkitSpeechRecognition() as SpeechRecognition;
+        recognition.continuous = true;
+        recognition.interimResults = true; // Enable interim results
+
+        recognition.onresult = (_: SpeechRecognitionEvent) => {
+            let finalTranscript = "";
+            for (let i = _.resultIndex; i < _.results.length; i++) {
+                if (_.results[i].isFinal) {
+                    finalTranscript += _.results[i][0].transcript + " ";
+                }
+            }
+            setTranscript((prev) => prev + finalTranscript); // 기존 transcript에 이어서 붙임
+        };
+        recognition.onend = () => {
+            setIsListening(false);
+        };
+        recognitionRef.current = recognition;
+        // 컴포넌트 언마운트 시 음성 인식 중지 (메모리 누수 방지)
+        return () => {
+            recognition.stop();
+        };
+    }, []);
+    const startListening = useCallback(async () => {
         if (recognitionRef.current) {
             recognitionRef.current.start();
             setIsListening(true);
             startVisualizer();
+
+            // Capture audio stream
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                });
+                const mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: "audio/webm",
+                });
+                mediaRecorderRef.current = mediaRecorder;
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        setAudioChunks((prev) => [...prev, event.data]); // Add audio chunks
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    console.log("MediaRecorder stopped.");
+                };
+
+                mediaRecorder.onerror = (event: any) => {
+                    console.error("MediaRecorder error:", event.error);
+                };
+
+                mediaRecorder.start();
+            } catch (error) {
+                console.error(
+                    "오디오 스트림을 가져오는 데 실패했습니다:",
+                    error,
+                );
+            }
         }
     }, []);
 
@@ -87,10 +143,29 @@ const useSpeechRecognition = () => {
             recognitionRef.current.stop();
             setIsListening(false);
             stopVisualizer();
+
+            if (mediaRecorderRef.current) {
+                mediaRecorderRef.current.stop();
+                mediaRecorderRef.current.stream
+                    .getTracks()
+                    .forEach((track) => track.stop()); // Stop audio tracks
+            }
         }
     }, []);
 
-    // Visualizer logic for block style with center alignment
+    const saveAudio = () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        const url = URL.createObjectURL(audioBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "recording.webm"; // Set the name of the downloaded file
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setAudioChunks([]); // Clear the chunks after saving
+    };
+
+    // Visualizer logic
     const startVisualizer = () => {
         if (!canvasRef.current) return;
         const canvas = canvasRef.current;
@@ -135,10 +210,10 @@ const useSpeechRecognition = () => {
                     ctx.fillStyle = "rgb(255, 0, 0)"; // Red blocks
                     ctx.fillRect(
                         x,
-                        centerY - barHeight / 2, // Center the bar
+                        centerY - barHeight / 2,
                         barWidth,
                         barHeight,
-                    );
+                    ); // Center the bar
 
                     x += barWidth + 1; // Add some space between bars
                 }
@@ -160,6 +235,7 @@ const useSpeechRecognition = () => {
         transcript,
         startListening,
         stopListening,
+        saveAudio,
         canvasRef,
     };
 };
