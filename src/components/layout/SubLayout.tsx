@@ -21,6 +21,8 @@ const SubLayout = () => {
                 return "즐겨찾기";
             case "/mypage":
                 return "마이 페이지";
+            case "/upload":
+                return "파일 업로드";
         }
     };
 
