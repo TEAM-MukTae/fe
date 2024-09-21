@@ -1,74 +1,51 @@
-import { useState } from "react";
-import Card from "../components/display/Card";
-import left from "../assets/leftLine.svg";
-import right from "../assets/rightLine.svg";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
+
+import Card from "../components/display/Card";
 import Button from "../components/display/Button";
+
+import { useNavigate } from "react-router-dom";
 import { useQuizDetail } from "../hooks/useQuizDetail";
 import { useTranslation } from "react-i18next";
 
-const dummy = {
-    questions: [
-        {
-            query: "이철우 경북도지사는 기자회견에서 무엇을 대구시에 제안했나요?",
-            choices: [
-                "신공항 입지를 변경할 것을 제안했다.",
-                "SPC(특수목적법인)를 구성할 것을 제안했다.",
-                "화물터미널의 위치를 변경할 것을 제안했다.",
-                "대구시와 행정통합을 제안했다.",
-            ],
-            answer: 1,
-            explanation:
-                "이철우 경북도지사는 신공항 건설을 위해 SPC(특수목적법인)를 구성할 것을 대구시에 제안했습니다.",
-        },
-        {
-            query: "이철우 도지사가 대구시의 신공항 입지 변경 발언에 대해 어떤 입장을 밝혔나요?",
-            choices: [
-                "대구시장 발언만으로 입지를 변경하는 것이 가능하다고 말했다.",
-                "대구시의 입지 변경 발언을 지지했다.",
-                "대구시장 발언만으로 입지를 변경하는 것은 불가능하다고 강조했다.",
-                "입지 변경에 대해 언급하지 않았다.",
-            ],
-            answer: 2,
-            explanation:
-                "이철우 도지사는 대구시장 발언만으로 공항 입지를 변경하는 것은 법적으로 불가능하다고 강조했습니다.",
-        },
-        {
-            query: "신공항 건설 사업의 예상 사업비는 얼마로 추산되었나요?",
-            choices: [
-                "약 15조 원",
-                "약 20조 원",
-                "약 26조 5천674억 원",
-                "약 30조 원",
-            ],
-            answer: 2,
-            explanation:
-                "신공항 건설 사업의 예상 사업비는 총 26조 5천674억 원으로 추산되었습니다.",
-        },
-    ],
-};
+import left from "../assets/leftLine.svg";
+import right from "../assets/rightLine.svg";
+
+export interface Question {
+    questionId: number;
+    query: string;
+    choices: string[];
+    answer: number;
+    explanation: string;
+}
 
 function SolvePage() {
     const { isLoading, isError, quizDetail } = useQuizDetail();
+    console.log(quizDetail);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
 
-    const [correctCount, setCorrectCount] = useState(0);
+    const [totalQuestions, setTotalQuestions] = useState<number>(0);
+    const [correctCount, setCorrectCount] = useState<number>(0);
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [currentQuestion, setCurrentQuestion] = useState<number>(0);
     const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
 
-    const totalQuestions = dummy.questions.length;
+    useEffect(() => {
+        if (quizDetail) {
+            setTotalQuestions(quizDetail.length);
+            console.log("sovle", quizDetail.length);
+        }
+    }, [quizDetail]);
 
     const handleChoiceClick = (index: number) => {
-        if (selectedAnswer !== null) return;
+        if (selectedAnswer !== null || !quizDetail) return;
         setSelectedAnswer(index);
 
         if (!answeredQuestions.has(currentQuestion)) {
-            if (index === dummy.questions[currentQuestion].answer) {
+            if (quizDetail && index === quizDetail[currentQuestion].answer) {
                 setCorrectCount((prev) => prev + 1);
             }
             setAnsweredQuestions((prev) => new Set(prev).add(currentQuestion));
@@ -76,14 +53,15 @@ function SolvePage() {
     };
 
     const handlePreviousQuestion = () => {
+        if (!quizDetail) return;
         setCurrentQuestion(
-            (prev) =>
-                (prev - 1 + dummy.questions.length) % dummy.questions.length,
+            (prev) => (prev - 1 + totalQuestions) % totalQuestions,
         );
         setSelectedAnswer(null);
     };
 
     const handleNextQuestion = () => {
+        if (!quizDetail) return;
         if (currentQuestion === totalQuestions - 1) {
             setOpenModal(true);
         } else {
@@ -100,8 +78,17 @@ function SolvePage() {
         setOpenModal(false);
     };
 
-    const question = dummy.questions[currentQuestion];
-    const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError || !quizDetail) {
+        return <div>Error loading quiz details</div>;
+    }
+
+    const question = quizDetail[currentQuestion];
+    console.log(question);
+    const progress = ((currentQuestion + 1) / quizDetail.length) * 100;
 
     return (
         <div className="flex flex-col p-2 pt-10 pb-16">
