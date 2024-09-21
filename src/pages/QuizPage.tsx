@@ -2,40 +2,16 @@ import Card from "../components/display/Card";
 import bottom from "../assets/chevron-bottom.svg";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useQuiz } from "../hooks/useQuiz";
 
-const dummy = {
-    quiz: [
-        { quizId: 1, title: "인공지능 Ch1 퀴즈", date: "09.18", starred: true },
-        { quizId: 2, title: "인공지능 Ch2 퀴즈", date: "09.18", starred: true },
-        {
-            quizId: 3,
-            title: "인공지능 Ch3 퀴즈",
-            date: "09.18",
-            starred: true,
-        },
-        {
-            quizId: 4,
-            title: "인공지능 Ch4 퀴즈",
-            date: "09.18",
-            starred: true,
-        },
-        {
-            quizId: 5,
-            title: "논리회로 Ch1 퀴즈",
-            date: "09.18",
-            starred: false,
-        },
-        {
-            quizId: 6,
-            title: "논리회로 Ch2 퀴즈",
-            date: "09.18",
-            starred: false,
-        },
-    ],
-};
+export interface QuizProps {
+    workbookId: number;
+    title: string;
+}
 
 function QuizPage() {
     const navigate = useNavigate();
+    const { isLoading, isError, quiz } = useQuiz();
 
     const { t } = useTranslation();
 
@@ -50,16 +26,16 @@ function QuizPage() {
                 <img src={bottom} />
             </div>
 
-            {dummy.quiz.map((quiz) => (
-                <Card
-                    key={quiz.quizId}
-                    keyword={quiz.date}
-                    isStarred={quiz.starred}
-                    onClick={() => handleCardClick(`${quiz.quizId}`)}
-                >
-                    {quiz.title}
-                </Card>
-            ))}
+            {quiz &&
+                quiz.map((data) => (
+                    <Card
+                        key={data.workbookId}
+                        date="09.18"
+                        onClick={() => handleCardClick(`${data.workbookId}`)}
+                    >
+                        {data.title}
+                    </Card>
+                ))}
         </div>
     );
 }
