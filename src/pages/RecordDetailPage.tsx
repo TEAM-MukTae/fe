@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useAudioDetail } from "../hooks/useAudioDetail";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import AudioPlayer from "react-h5-audio-player";
@@ -22,6 +22,12 @@ function RecordDetailPage() {
 
     const [activeTab, setActiveTab] = useState<string>("script");
     const [url, setUrl] = useState<string>("");
+
+    useEffect(() => {
+        if (audioDetail?.voiceUrl) {
+            setUrl(audioDetail.voiceUrl);
+        }
+    }, [audioDetail]);
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);

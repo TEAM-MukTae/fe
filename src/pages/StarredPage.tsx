@@ -35,7 +35,7 @@ const StarredPage = () => {
             {dummy.quiz.map((quiz) => (
                 <Card
                     key={quiz.quizId}
-                    keyword={quiz.date}
+                    date={quiz.date}
                     isStarred={quiz.starred}
                 >
                     {quiz.title}
