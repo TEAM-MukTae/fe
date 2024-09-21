@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { api } from "../../config/axios";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface SlideModalProps {
     isOpen: boolean;
@@ -37,11 +38,12 @@ const SlideModal: React.FC<SlideModalProps> = ({
     const [selectedLanguage, setSelectedLanguage] = useState("Korean");
     const [selectedTopic, setSelectedTopic] = useState("General");
     const [showCongratulation, setShowCongratulation] = useState(false);
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
     useEffect(() => {
         const today = new Date().toISOString().split("T")[0];
-        setRecordingName(`음성녹음-${today}`);
+        setRecordingName(`${t("recording")}-${today}`);
     }, [isOpen]);
 
     const handleSave = async () => {
