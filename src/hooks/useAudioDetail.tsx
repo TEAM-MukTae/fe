@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { AudioDetail } from "../pages/RecordDetailPage";
 
 import { api } from "../config/axios";
 
-export const useAllAudio = () => {
-    const [allAudio, setAllAudio] = useState<number | null>(null);
+export const useAudioDetail = (id: number) => {
+    const [audioDetail, setAudioDetail] = useState<AudioDetail | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
 
@@ -11,9 +12,9 @@ export const useAllAudio = () => {
         setIsLoading(true);
         setIsError(false);
 
-        api.get(`/audio`)
+        api.get(`/audio/${id}`)
             .then((data) => {
-                setAllAudio(data.data.total_count);
+                setAudioDetail(data.data.data);
             })
             .catch(() => {
                 setIsError(true);
@@ -23,5 +24,5 @@ export const useAllAudio = () => {
             });
     }, []);
 
-    return { isLoading, isError, allAudio };
+    return { isLoading, isError, audioDetail };
 };

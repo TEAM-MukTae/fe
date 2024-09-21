@@ -3,24 +3,30 @@ import { Outlet } from "react-router-dom";
 import leftArrow from "../../assets/leftArrow.svg";
 import home from "../../assets/home.svg";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SubLayout = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
 
     const getTitle = () => {
         switch (location.pathname) {
             case "/recording":
-                return "AI 학습 보조";
+                return t("subLayout.recording");
             case "/quiz":
             case "/quiz/:quizId":
-                return "퀴즈 목록";
+                return t("subLayout.quizList");
             case "/solve":
-                return "퀴즈 풀기";
+                return t("subLayout.solveQuiz");
             case "/starred":
-                return "즐겨찾기";
+                return t("subLayout.starred");
             case "/mypage":
-                return "마이 페이지";
+                return t("subLayout.mypage");
+            case "/upload":
+                return t("subLayout.upload");
+            default:
+                return "";
         }
     };
 

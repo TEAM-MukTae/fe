@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Audio } from "../pages/HomePage";
+import { QuizProps } from "../pages/QuizPage";
 
 import { api } from "../config/axios";
 
-export const useAudio = () => {
-    const [audio, setAudio] = useState<Audio | null>(null);
+export const useQuiz = () => {
+    const [quiz, setQuiz] = useState<QuizProps[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
 
@@ -12,9 +12,10 @@ export const useAudio = () => {
         setIsLoading(true);
         setIsError(false);
 
-        api.get(`/audio`)
+        api.get(`/quiz`)
             .then((data) => {
-                setAudio(data.data.data);
+                setQuiz(data.data.data);
+                console.log(data.data.data);
             })
             .catch(() => {
                 setIsError(true);
@@ -24,5 +25,5 @@ export const useAudio = () => {
             });
     }, []);
 
-    return { isLoading, isError, audio };
+    return { isLoading, isError, quiz };
 };

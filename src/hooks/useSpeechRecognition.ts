@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import axios from "axios";
+import { api } from "../config/axios";
+import i18n from "../i18n";
 
 // Web Speech API 관련 타입 정의
 interface SpeechRecognition extends EventTarget {
@@ -33,7 +36,9 @@ interface SpeechRecognitionAlternative {
 const useSpeechRecognition = () => {
     const [isListening, setIsListening] = useState<boolean>(false);
     const [transcript, setTranscript] = useState<string>("");
+    const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
     const recognitionRef = useRef<SpeechRecognition | null>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null); // Canvas ref for visualizer
 
     useEffect(() => {
@@ -48,37 +53,91 @@ const useSpeechRecognition = () => {
         recognition.continuous = true;
         recognition.interimResults = true; // Enable interim results
 
-        recognition.onresult = (event: SpeechRecognitionEvent) => {
-            let finalTranscript = "";
-            let interimTranscript = "";
-
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript + " ";
-                } else {
-                    interimTranscript += event.results[i][0].transcript + " "; // Collect interim results
-                }
-            }
-
-            setTranscript(finalTranscript + interimTranscript); // Update with final and interim transcripts
-        };
-
+        recognition.onresult = handleResult; // Use the handleResult function
         recognition.onend = () => {
             setIsListening(false);
         };
-
         recognitionRef.current = recognition;
-
+        startVisualizer();
+        // 컴포넌트 언마운트 시 음성 인식 중지 (메모리 누수 방지)
         return () => {
             recognition.stop();
         };
     }, []);
 
-    const startListening = useCallback(() => {
+    const handleResult = async (_: SpeechRecognitionEvent) => {
+        const promises = []; // Create an array to hold promises
+
+        for (let i = _.resultIndex; i < _.results.length; i++) {
+            if (_.results[i].isFinal) {
+                const finalTranscript = _.results[i][0].transcript;
+                promises.push(translateText(finalTranscript));
+            }
+        }
+
+        // Wait for all translation requests to complete
+        const translatedTexts = await Promise.all(promises);
+        const completeTranscript = translatedTexts.join(" "); // Combine all translated texts
+
+        // Update transcript state
+        setTranscript((prev) => prev + completeTranscript + " ");
+    };
+
+    const translateText = async (text: string) => {
+        const lan = i18n.language === "zh" ? "zh-CN" : i18n.language;
+        const data = {
+            text: text,
+            target: lan,
+        };
+        if (lan !== "ko") {
+            try {
+                const res = await api.post("/translate", data);
+                return res.data; // Return the translated text
+            } catch (error) {
+                console.error("Translation error:", error);
+                return text; // If error, return the original text
+            }
+        } else {
+            return text;
+        }
+    };
+
+    const startListening = useCallback(async () => {
         if (recognitionRef.current) {
             recognitionRef.current.start();
             setIsListening(true);
-            startVisualizer();
+
+            // Capture audio stream
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                });
+                const mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: "audio/webm",
+                });
+                mediaRecorderRef.current = mediaRecorder;
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        setAudioChunks((prev) => [...prev, event.data]); // Add audio chunks
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    console.log("MediaRecorder stopped.");
+                };
+
+                mediaRecorder.onerror = (event: any) => {
+                    console.error("MediaRecorder error:", event.error);
+                };
+
+                mediaRecorder.start();
+            } catch (error) {
+                console.error(
+                    "오디오 스트림을 가져오는 데 실패했습니다:",
+                    error,
+                );
+            }
         }
     }, []);
 
@@ -87,10 +146,23 @@ const useSpeechRecognition = () => {
             recognitionRef.current.stop();
             setIsListening(false);
             stopVisualizer();
+
+            if (mediaRecorderRef.current) {
+                mediaRecorderRef.current.stop();
+                mediaRecorderRef.current.stream
+                    .getTracks()
+                    .forEach((track) => track.stop()); // Stop audio tracks
+            }
         }
     }, []);
 
-    // Visualizer logic for block style with center alignment
+    const saveAudio = () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        setAudioChunks([]); // Clear the chunks after saving
+        return audioBlob; // Return the Blob for further processing
+    };
+
+    // Visualizer logic
     const startVisualizer = () => {
         if (!canvasRef.current) return;
         const canvas = canvasRef.current;
@@ -118,7 +190,7 @@ const useSpeechRecognition = () => {
                 analyser.getByteFrequencyData(dataArray); // Get frequency data
 
                 ctx.clearRect(0, 0, WIDTH, HEIGHT);
-                ctx.fillStyle = "rgb(255, 255, 255)";
+                ctx.fillStyle = "rgb(0,0,0)";
                 ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
                 const barWidth = (WIDTH / bufferLength) * 0.8; // Width of each bar
@@ -132,13 +204,30 @@ const useSpeechRecognition = () => {
                     const maxBarHeight = HEIGHT * 0.5; // Max height is 50% of the canvas height
                     barHeight = Math.min(barHeight, maxBarHeight);
 
-                    ctx.fillStyle = "rgb(255, 0, 0)"; // Red blocks
+                    // Create a gradient for each bar from yellow to red
+                    const gradient = ctx.createLinearGradient(
+                        x,
+                        centerY - barHeight / 2,
+                        x,
+                        centerY + barHeight / 2,
+                    );
+
+                    // Calculate the color stop based on the index
+                    const yellowToRedRatio = i / bufferLength;
+                    const r = Math.floor(255 * yellowToRedRatio); // Red increases from 0 to 255
+                    const g = Math.floor(255 * (1 - yellowToRedRatio)); // Green decreases from 255 to 0
+                    const b = 0; // Keep blue at 0
+
+                    gradient.addColorStop(0, `rgb(${r},${g},${b})`); // Start color
+                    gradient.addColorStop(1, `rgb(255, 0, 0)`); // End color (deep red)
+
+                    ctx.fillStyle = gradient; // Set the gradient as the fill style
                     ctx.fillRect(
                         x,
-                        centerY - barHeight / 2, // Center the bar
+                        centerY - barHeight / 2,
                         barWidth,
                         barHeight,
-                    );
+                    ); // Center the bar
 
                     x += barWidth + 1; // Add some space between bars
                 }
@@ -160,6 +249,7 @@ const useSpeechRecognition = () => {
         transcript,
         startListening,
         stopListening,
+        saveAudio,
         canvasRef,
     };
 };
