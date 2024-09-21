@@ -1,10 +1,14 @@
 import React, { CSSProperties } from "react";
+
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
+import bottom from "../assets/chevron-bottom.svg";
+import logo from "../assets/logo.svg";
+
+import { useAudio } from "../hooks/useAudio";
 
 import Card from "../components/display/Card";
-import bottom from "../assets/chevron-bottom.svg";
-import { useAudio } from "../hooks/useAudio";
-import { useNavigate } from "react-router-dom";
 
 interface FeatureCardProps {
     backgroundColor: string;
@@ -96,8 +100,11 @@ function MainPage() {
 
     return (
         <div className="pb-10">
-            <div className="flex flex-row">
-                <div className="mr-2">아이콘</div>
+            <div className="flex flex-row mb-2">
+                <div className="mr-2">
+                    <img src={logo} />
+                </div>
+
                 <div className="mr-2">경북대학교 AI 학습 보조 플랫폼</div>
             </div>
 
