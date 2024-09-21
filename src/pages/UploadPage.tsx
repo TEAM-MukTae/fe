@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { useAudio } from "../hooks/useAudio";
 import { useNavigate } from "react-router-dom";
@@ -54,10 +54,6 @@ export default function UploadPage() {
     const [toast, setToast] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>("audio");
     const [selectedCardIds, setSelectedCardIds] = useState<number[]>([]);
-
-    // useEffect(() => {
-    //     toggleCardSelection(id);
-    // }, []);
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
