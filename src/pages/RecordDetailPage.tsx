@@ -35,9 +35,6 @@ function RecordDetailPage() {
 
     return (
         <>
-            {isLoading && <div>{t("loading")}</div>}
-            {isError && <div>{t("error_occurred")}</div>}
-
             <div className="flex justify-around border-b">
                 <button
                     className={`py-2 px-4 text-center flex-1 font-bold ${
@@ -73,6 +70,9 @@ function RecordDetailPage() {
                 {activeTab === "summary" && !audioDetail && (
                     <div>{t("recordDetail.summaryPreparing")}</div>
                 )}
+
+                {isLoading && <div>{t("loading")}</div>}
+                {isError && <div>{t("error_occurred")}</div>}
             </div>
 
             <div className="fixed bottom-0 left-0 right-0">
