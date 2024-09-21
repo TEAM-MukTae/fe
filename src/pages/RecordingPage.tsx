@@ -68,7 +68,7 @@ const RecordingPage = () => {
                                         height="20"
                                         className="mt-1"
                                         style={{
-                                            transform: "translateX(-70px)",
+                                            transform: "translateX(-60px)",
                                         }} // 400 - 20 = 380px 이동
                                     ></canvas>
                                 </div>
