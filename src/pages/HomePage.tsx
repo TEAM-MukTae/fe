@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import Card from "../components/display/Card";
 import bottom from "../assets/chevron-bottom.svg";
-import { useAllAudio } from "../hooks/useAllAudio";
+import { useAudio } from "../hooks/useAudio";
 import { useNavigate } from "react-router-dom";
 
 interface FeatureCardProps {
@@ -79,49 +79,28 @@ const FeatureCards = () => {
     );
 };
 
-type Audio = {
+export interface Audio {
     id: number;
     title: string;
-    keyword: string[];
-    isStarred: boolean;
-};
-
-type DummyData = {
-    allAudio: Audio[];
-};
-
-const dummy: DummyData = {
-    allAudio: [
-        {
-            id: 0,
-            title: "제목",
-            keyword: ["아빠", "엄마", "효도"],
-            isStarred: true,
-        },
-        {
-            id: 1,
-            title: "제목",
-            keyword: ["아빠", "엄마", "효도"],
-            isStarred: true,
-        },
-        {
-            id: 3,
-            title: "제목",
-            keyword: ["아빠", "엄마", "효도"],
-            isStarred: true,
-        },
-    ],
-};
+    keywords: string[];
+    starred: boolean;
+}
 
 function MainPage() {
     const { t } = useTranslation();
 
-    const { isLoading, isError, allAudio } = useAllAudio();
+    const { isLoading, isError, audio } = useAudio();
+    console.log("audio data", audio);
 
     const navigate = useNavigate();
 
     return (
         <div className="pb-10">
+            <div className="flex flex-row">
+                <div className="mr-2">아이콘</div>
+                <div className="mr-2">경북대학교 AI 학습 보조 플랫폼</div>
+            </div>
+
             <FeatureCards />
 
             <div className="flex flex-row items-center justify-end">
@@ -132,17 +111,29 @@ function MainPage() {
             {isLoading && <div>{t("loading")}</div>}
             {isError && <div>{t("error_occurred")}</div>}
 
-            {dummy.allAudio.map(({ id, title, keyword }: Audio) => (
-                <Card
-                    key={id}
-                    keyword={keyword}
-                    onClick={() =>
-                        navigate(`/recording/${id}`, { state: { id } })
-                    }
-                >
-                    {title}
-                </Card>
-            ))}
+            {Array.isArray(audio) && audio.length > 0 ? (
+                audio.map(({ id, title, keywords, starred }: Audio) => (
+                    <Card
+                        key={id}
+                        keyword={
+                            Array.isArray(keywords) && keywords.length > 0
+                                ? keywords
+                                : "No keywords"
+                        }
+                        isStarred={starred}
+                        onClick={() => {
+                            console.log(
+                                `Navigating to recording with id: ${id}`,
+                            );
+                            navigate(`/recording/${id}`, { state: { id } });
+                        }}
+                    >
+                        {title}
+                    </Card>
+                ))
+            ) : (
+                <div>No audio data available</div>
+            )}
         </div>
     );
 }

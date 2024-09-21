@@ -6,88 +6,22 @@ import { useTranslation } from "react-i18next";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 
-const dummy = {
-    data: [
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-        {
-            id: 0,
-            script: ["안녕하세요.", "hello", "hi", "안녕"],
-            url: "http://naver.com",
-        },
-    ],
-};
-
-type AudioDetail = {
+export interface AudioDetail {
     id: number;
-    script: string[];
-    url: string;
-};
+    text: string;
+    summary: string;
+    voiceUrl: string;
+}
 
 function RecordDetailPage() {
     const location = useLocation();
     const { t } = useTranslation();
     const { id } = location.state || {};
 
-    const [activeTab, setActiveTab] = useState<string>("script");
-
     const { isLoading, isError, audioDetail } = useAudioDetail(id);
 
-    if (isLoading) return <div>Loading...</div>;
-    // if (isError) return <div>오류가 발생했습니다.</div>;
+    const [activeTab, setActiveTab] = useState<string>("script");
+    const [url, setUrl] = useState<string>("");
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
@@ -95,6 +29,9 @@ function RecordDetailPage() {
 
     return (
         <>
+            {isLoading && <div>{t("loading")}</div>}
+            {isError && <div>{t("error_occurred")}</div>}
+
             <div className="flex justify-around border-b">
                 <button
                     className={`py-2 px-4 text-center flex-1 font-bold ${
@@ -118,24 +55,16 @@ function RecordDetailPage() {
                 </button>
             </div>
 
-            <div
-                className="p-4 bg-gray-100 "
-                style={{ paddingBottom: "100px" }}
-            >
-                {activeTab === "script" && (
-                    <>
-                        {dummy.data.map(({ id, script, url }: AudioDetail) => (
-                            <div key={id} className="mt-1">
-                                {script.map((line, index) => (
-                                    <div key={index} className="mt-4">
-                                        {line}
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
-                    </>
+            <div className="p-4 bg-gray-100" style={{ paddingBottom: "100px" }}>
+                {activeTab === "script" && audioDetail && (
+                    <div className="mt-1">{audioDetail.text}</div>
                 )}
-                {activeTab === "summary" && (
+
+                {activeTab === "summary" && audioDetail && (
+                    <div className="mt-1">{audioDetail.summary}</div>
+                )}
+
+                {activeTab === "summary" && !audioDetail && (
                     <div>{t("recordDetail.summaryPreparing")}</div>
                 )}
             </div>
@@ -143,7 +72,7 @@ function RecordDetailPage() {
             <div className="fixed bottom-0 left-0 right-0">
                 <AudioPlayer
                     autoPlay
-                    src="http://example.com/audio.mp3"
+                    src={url}
                     onPlay={(e) => console.log("onPlay")}
                     style={{ width: "100vw" }}
                 />

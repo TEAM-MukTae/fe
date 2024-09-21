@@ -174,7 +174,6 @@ function SolvePage() {
                         <div className="flex flex-col mt-2">
                             <div className="text-gray-700">
                                 {t("quiz.correctAnswer")}: {question.answer + 1}
-                                번
                             </div>
                             <div className="mt-2 text-gray-700">
                                 {question.explanation}

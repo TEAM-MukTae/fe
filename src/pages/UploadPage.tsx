@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-import { useAllAudio } from "../hooks/useAllAudio";
+import { useAudio } from "../hooks/useAudio";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -47,17 +47,13 @@ const dummy: DummyData = {
 export default function UploadPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { isLoading, isError, allAudio } = useAllAudio();
+    const { isLoading, isError, audio } = useAudio();
 
     const [fileName, setFileName] = useState<string>("");
     const [toastMessage, setToastMessage] = useState<string>("");
     const [toast, setToast] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>("audio");
     const [selectedCardIds, setSelectedCardIds] = useState<number[]>([]);
-
-    // useEffect(() => {
-    //     toggleCardSelection(id);
-    // }, []);
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
