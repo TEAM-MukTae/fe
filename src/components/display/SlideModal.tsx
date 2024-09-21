@@ -1,121 +1,192 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { api } from "../../config/axios";
 import { useNavigate } from "react-router-dom";
 
 interface SlideModalProps {
     isOpen: boolean;
     onClose: () => void;
-    content: string;
-    saveAudio: () => void; // Add saveAudio prop
+    transcript: string;
+    saveAudio: () => Blob;
 }
+
+const CongratulationModal: React.FC = () => {
+    return (
+        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+            <motion.div
+                className="bg-white p-6 rounded-lg shadow-lg text-center"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+            >
+                <h2 className="text-2xl font-bold">🎉 축하합니다!</h2>
+                <p className="mt-2">녹음이 성공적으로 저장되었습니다!</p>
+            </motion.div>
+        </div>
+    );
+};
 
 const SlideModal: React.FC<SlideModalProps> = ({
     isOpen,
     onClose,
-    content,
+    transcript,
     saveAudio,
 }) => {
+    const [recordingName, setRecordingName] = useState("");
+    const [selectedLanguage, setSelectedLanguage] = useState("Korean");
+    const [selectedTopic, setSelectedTopic] = useState("General");
+    const [showCongratulation, setShowCongratulation] = useState(false);
     const navigate = useNavigate();
-    const [showConfirmSave, setShowConfirmSave] = useState<boolean>(false);
-    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
-    const handleConfirm = () => {
-        setShowConfirmSave(true); // 첫 번째 모달에서 확인을 클릭하면 저장 여부 모달 표시
-    };
+    useEffect(() => {
+        const today = new Date().toISOString().split("T")[0];
+        setRecordingName(`음성녹음-${today}`);
+    }, [isOpen]);
 
-    const handleSaveConfirmation = async (shouldSave: boolean) => {
-        if (shouldSave) {
-            saveAudio(); // Call saveAudio
-            /**
-             * 서버로 보내는 로직 추가.
-             */
-            setShowSuccessModal(true); // 성공 모달 표시
+    const handleSave = async () => {
+        try {
+            const formData = new FormData();
+
+            const recordRequest = {
+                title: recordingName,
+                text: transcript.trim(),
+            };
+            formData.append(
+                "recordRequest",
+                new Blob([JSON.stringify(recordRequest)], {
+                    type: "application/json",
+                }),
+            );
+
+            const audioBlob = await saveAudio();
+            formData.append("file", audioBlob, "recording.wav");
+            const response = await api.post("/audio", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            console.log("Response:", response.data);
+
+            // Show congratulation modal
+            setShowCongratulation(true);
+
+            // Hide after 3 seconds and navigate
             setTimeout(() => {
-                navigate("/"); // 2초 후 홈으로 이동
-            }, 2000);
+                setShowCongratulation(false);
+                navigate("/");
+                onClose();
+            }, 3000);
+        } catch (error) {
+            console.error("Error saving recording:", error);
         }
-        setShowConfirmSave(false); // 두 번째 모달 닫기
     };
 
     return (
         <>
-            {isOpen && !showConfirmSave && !showSuccessModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+            {isOpen && (
+                <>
+                    {/* Overlay */}
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                        onClick={onClose}
+                    ></div>
+
+                    {/* Modal Content */}
                     <motion.div
-                        initial={{ y: "100%", opacity: 0 }}
-                        animate={{ y: "0%", opacity: 1 }}
-                        exit={{ y: "100%", opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="bg-white rounded-lg shadow-lg p-4 w-11/12 max-w-sm"
+                        className="h-[300px] fixed bottom-0 left-0 right-0 bg-white p-6 rounded-t-3xl z-50 shadow-lg flex flex-col items-center"
+                        initial={{ y: "100%" }}
+                        animate={{ y: isOpen ? 0 : "100%" }}
+                        exit={{ y: "100%" }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30,
+                        }}
                     >
-                        <h2 className="text-lg font-bold mb-2">
-                            🎉 녹음을 성공적으로 마쳤습니다!
+                        <h2 className="text-xl font-bold mb-4 text-center">
+                            녹음명 입력
                         </h2>
-                        <p className="text-sm mb-4">{content}</p>
-                        <div className="flex space-x-3">
-                            <button
-                                onClick={handleConfirm}
-                                className="p-2 bg-blue-500 text-white rounded transition hover:bg-blue-600"
-                            >
-                                확인
-                            </button>
-                            <button
-                                onClick={onClose}
-                                className="p-2 bg-gray-300 rounded transition hover:bg-gray-400"
-                            >
-                                취소
-                            </button>
+
+                        {/* Input and Dropdowns */}
+                        <div className="flex flex-col w-full space-y-4">
+                            <div className="flex items-center">
+                                <label
+                                    htmlFor="recording-name"
+                                    className="mr-2 w-24 text-right"
+                                >
+                                    녹음명:
+                                </label>
+                                <input
+                                    id="recording-name"
+                                    type="text"
+                                    value={recordingName}
+                                    onChange={(e) =>
+                                        setRecordingName(e.target.value)
+                                    }
+                                    className="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="녹음명 입력"
+                                />
+                            </div>
+
+                            <div className="flex items-center">
+                                <label
+                                    htmlFor="language"
+                                    className="mr-2 w-24 text-right"
+                                >
+                                    언어:
+                                </label>
+                                <select
+                                    id="language"
+                                    value={selectedLanguage}
+                                    onChange={(e) =>
+                                        setSelectedLanguage(e.target.value)
+                                    }
+                                    className="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="Korean">한국어</option>
+                                    <option value="English">영어</option>
+                                    <option value="Chinese">중국어</option>
+                                    <option value="Japanese">일본어</option>
+                                </select>
+                            </div>
+
+                            <div className="flex items-center">
+                                <label
+                                    htmlFor="topic"
+                                    className="mr-2 w-24 text-right"
+                                >
+                                    주제:
+                                </label>
+                                <select
+                                    id="topic"
+                                    value={selectedTopic}
+                                    onChange={(e) =>
+                                        setSelectedTopic(e.target.value)
+                                    }
+                                    className="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="General">일반</option>
+                                    <option value="Technology">기술</option>
+                                    <option value="Education">교육</option>
+                                    <option value="Health">건강</option>
+                                </select>
+                            </div>
                         </div>
+
+                        <button
+                            onClick={handleSave}
+                            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-500 transition-colors duration-200"
+                        >
+                            저장
+                        </button>
                     </motion.div>
-                </div>
+                </>
             )}
-            {showConfirmSave && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-                    <motion.div
-                        initial={{ y: "100%", opacity: 0 }}
-                        animate={{ y: "0%", opacity: 1 }}
-                        exit={{ y: "100%", opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="bg-white rounded-lg shadow-lg p-4 w-11/12 max-w-sm"
-                    >
-                        <h2 className="text-lg font-bold mb-2">
-                            📥 해당 내용을 정상적으로 저장하시겠습니까?
-                        </h2>
-                        <div className="flex space-x-3">
-                            <button
-                                onClick={() => handleSaveConfirmation(true)} // 예 클릭 시 저장
-                                className="p-2 bg-blue-500 text-white rounded transition hover:bg-blue-600"
-                            >
-                                예
-                            </button>
-                            <button
-                                onClick={() => handleSaveConfirmation(false)} // 아니요 클릭 시 확인
-                                className="p-2 bg-red-500 text-white rounded transition hover:bg-red-600"
-                            >
-                                아니요
-                            </button>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
-            {showSuccessModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-                    <motion.div
-                        initial={{ y: "100%", opacity: 0 }}
-                        animate={{ y: "0%", opacity: 1 }}
-                        exit={{ y: "100%", opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="bg-white rounded-lg shadow-lg p-4 w-11/12 max-w-sm"
-                    >
-                        <h2 className="text-lg font-bold mb-2">
-                            ✅ 성공적으로 서버로 전송되었습니다!
-                        </h2>
-                        <p className="text-sm">
-                            내용을 요약하는데 시간이 걸릴 수 있습니다.
-                        </p>
-                    </motion.div>
-                </div>
-            )}
+
+            {/* Congratulation Modal */}
+            {showCongratulation && <CongratulationModal />}
         </>
     );
 };

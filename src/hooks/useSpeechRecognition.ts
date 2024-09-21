@@ -158,15 +158,18 @@ const useSpeechRecognition = () => {
     }, []);
 
     const saveAudio = () => {
+        // const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        // const url = URL.createObjectURL(audioBlob);
+        // const a = document.createElement("a");
+        // a.href = url;
+        // a.download = "recording.webm"; // Set the name of the downloaded file
+        // document.body.appendChild(a);
+        // a.click();
+        // document.body.removeChild(a);
+        // setAudioChunks([]); // Clear the chunks after saving
         const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-        const url = URL.createObjectURL(audioBlob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "recording.webm"; // Set the name of the downloaded file
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
         setAudioChunks([]); // Clear the chunks after saving
+        return audioBlob; // Return the Blob for further processing
     };
 
     // Visualizer logic
