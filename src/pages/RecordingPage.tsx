@@ -4,44 +4,43 @@ import leftArrow from "../assets/leftArrow.svg";
 import home from "../assets/home.svg";
 import record from "../assets/record.svg";
 import stop from "../assets/stop.svg";
-import { useNavigate } from "react-router-dom"; // 수정된 부분
+import { useNavigate } from "react-router-dom";
 import Transcript from "../components/display/Transcript";
+import SlideModal from "../components/display/SlideModal";
 
 const RecordingPage = () => {
     const navigate = useNavigate();
     const [isRecording, setIsRecording] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [modalContent, setModalContent] = useState<string>("");
 
     const {
-        isListening,
         transcript,
         startListening,
         stopListening,
-        saveAudio,
+        saveAudio, // Get saveAudio from the hook
         canvasRef,
     } = useSpeechRecognition();
 
     const handleRecordToggle = () => {
         if (isRecording) {
-            console.log(transcript);
             stopListening();
+            setModalContent(transcript);
+            setIsModalOpen(true);
         } else {
             startListening();
         }
         setIsRecording(!isRecording);
     };
 
-    const handleStopRecording = () => {
-        if (isRecording) {
-            stopListening();
-            setIsRecording(false);
-        }
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
         <>
-            {/* Visualizer and Control Button */}
             <div className="flex flex-col items-center justify-center py-6">
-                <div className=" w-72 h-24 flex items-center justify-center">
+                <div className="w-72 h-24 flex items-center justify-center">
                     <canvas
                         ref={canvasRef}
                         width="100"
@@ -63,11 +62,16 @@ const RecordingPage = () => {
                 </div>
             </div>
             <div className="my-4">
-                <button onClick={saveAudio}>aa</button>
-
                 <Transcript content={transcript} />
             </div>
-            <div className="flex justify-center"></div>
+
+            {/* Modal for Transcript Display */}
+            <SlideModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                content={modalContent}
+                saveAudio={saveAudio} // Pass saveAudio to the modal
+            />
         </>
     );
 };
