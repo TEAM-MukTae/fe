@@ -5,6 +5,7 @@ i18n.use(initReactI18next).init({
     resources: {
         en: {
             translation: {
+                recording: "Voice-Recording",
                 feature_cards: {
                     card1: {
                         title: "Now without inconvenience",
@@ -71,6 +72,7 @@ i18n.use(initReactI18next).init({
         },
         ko: {
             translation: {
+                recording: "음성녹음",
                 feature_cards: {
                     card1: {
                         title: "이제 불편없이",
@@ -144,6 +146,7 @@ i18n.use(initReactI18next).init({
         },
         zh: {
             translation: {
+                recording: "录音",
                 feature_cards: {
                     card1: {
                         title: "现在无需烦恼",
@@ -216,6 +219,7 @@ i18n.use(initReactI18next).init({
         },
         vi: {
             translation: {
+                recording: "ghi-âm",
                 feature_cards: {
                     card1: {
                         title: "Không còn lo lắng",
