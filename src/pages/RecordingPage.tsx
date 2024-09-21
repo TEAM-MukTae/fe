@@ -6,26 +6,20 @@ import record from "../assets/record.svg";
 import stop from "../assets/stop.svg";
 import { useNavigate } from "react-router-dom";
 import Transcript from "../components/display/Transcript";
+import { motion } from "framer-motion";
 import SlideModal from "../components/display/SlideModal";
 
 const RecordingPage = () => {
     const navigate = useNavigate();
     const [isRecording, setIsRecording] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [modalContent, setModalContent] = useState<string>("");
 
-    const {
-        transcript,
-        startListening,
-        stopListening,
-        saveAudio, // Get saveAudio from the hook
-        canvasRef,
-    } = useSpeechRecognition();
+    const { transcript, startListening, stopListening, saveAudio, canvasRef } =
+        useSpeechRecognition();
 
     const handleRecordToggle = () => {
         if (isRecording) {
             stopListening();
-            setModalContent(transcript);
             setIsModalOpen(true);
         } else {
             startListening();
@@ -39,7 +33,13 @@ const RecordingPage = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center justify-center py-6">
+            <div className="flex flex-col items-center justify-center mt-3">
+                {/* Transcript area with border and scroll */}
+                <div className="w-[300px] h-[490px] border border-gray-300 rounded-lg p-2 overflow-y-auto mb-4">
+                    <Transcript content={transcript} />
+                </div>
+
+                {/* Visualizer and recording button area */}
                 <div className="w-72 h-24 flex items-center justify-center">
                     <canvas
                         ref={canvasRef}
@@ -61,16 +61,11 @@ const RecordingPage = () => {
                     </div>
                 </div>
             </div>
-            <div className="my-4">
-                <Transcript content={transcript} />
-            </div>
-
-            {/* Modal for Transcript Display */}
             <SlideModal
                 isOpen={isModalOpen}
                 onClose={closeModal}
-                content={modalContent}
-                saveAudio={saveAudio} // Pass saveAudio to the modal
+                transcript={transcript}
+                saveAudio={saveAudio}
             />
         </>
     );
