@@ -8,10 +8,15 @@ const MyPage = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeLanguage = (lang: string) => {
-        console.log(lang);
         i18n.changeLanguage(lang);
-        console.log(t("feature_cards.card1.title"));
         setDropdownOpen(false);
+    };
+
+    const languageMap: Record<string, string> = {
+        ko: "한국어",
+        en: "English",
+        zh: "中文",
+        vi: "Tiếng Việt",
     };
 
     return (
@@ -36,7 +41,7 @@ const MyPage = () => {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="px-4 py-2 transition bg-white border rounded-md shadow"
                 >
-                    {t("select_language")}
+                    {languageMap[i18n.language] || t("select_language")}
                 </button>
 
                 {dropdownOpen && (
