@@ -122,9 +122,6 @@ function MainPage() {
                         }
                         isStarred={starred}
                         onClick={() => {
-                            console.log(
-                                `Navigating to recording with id: ${id}`,
-                            );
                             navigate(`/recording/${id}`, { state: { id } });
                         }}
                     >
