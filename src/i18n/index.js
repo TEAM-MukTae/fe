@@ -78,7 +78,7 @@ i18n.use(initReactI18next).init({
                     starred: "즐겨찾기",
                     my: "마이",
                 },
-                quizList: {
+                quiz: {
                     correctAnswers: "맞힌 문제",
                     previous: "이전 문제",
                     next: "다음 문제",
