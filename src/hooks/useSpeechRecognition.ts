@@ -58,7 +58,7 @@ const useSpeechRecognition = () => {
             setIsListening(false);
         };
         recognitionRef.current = recognition;
-
+        startVisualizer();
         // 컴포넌트 언마운트 시 음성 인식 중지 (메모리 누수 방지)
         return () => {
             recognition.stop();
@@ -106,7 +106,6 @@ const useSpeechRecognition = () => {
         if (recognitionRef.current) {
             recognitionRef.current.start();
             setIsListening(true);
-            startVisualizer();
 
             // Capture audio stream
             try {
@@ -158,15 +157,6 @@ const useSpeechRecognition = () => {
     }, []);
 
     const saveAudio = () => {
-        // const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-        // const url = URL.createObjectURL(audioBlob);
-        // const a = document.createElement("a");
-        // a.href = url;
-        // a.download = "recording.webm"; // Set the name of the downloaded file
-        // document.body.appendChild(a);
-        // a.click();
-        // document.body.removeChild(a);
-        // setAudioChunks([]); // Clear the chunks after saving
         const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
         setAudioChunks([]); // Clear the chunks after saving
         return audioBlob; // Return the Blob for further processing
@@ -200,7 +190,7 @@ const useSpeechRecognition = () => {
                 analyser.getByteFrequencyData(dataArray); // Get frequency data
 
                 ctx.clearRect(0, 0, WIDTH, HEIGHT);
-                ctx.fillStyle = "rgb(255, 255, 255)";
+                ctx.fillStyle = "rgb(0,0,0)";
                 ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
                 const barWidth = (WIDTH / bufferLength) * 0.8; // Width of each bar
@@ -214,7 +204,24 @@ const useSpeechRecognition = () => {
                     const maxBarHeight = HEIGHT * 0.5; // Max height is 50% of the canvas height
                     barHeight = Math.min(barHeight, maxBarHeight);
 
-                    ctx.fillStyle = "rgb(255, 0, 0)"; // Red blocks
+                    // Create a gradient for each bar from yellow to red
+                    const gradient = ctx.createLinearGradient(
+                        x,
+                        centerY - barHeight / 2,
+                        x,
+                        centerY + barHeight / 2,
+                    );
+
+                    // Calculate the color stop based on the index
+                    const yellowToRedRatio = i / bufferLength;
+                    const r = Math.floor(255 * yellowToRedRatio); // Red increases from 0 to 255
+                    const g = Math.floor(255 * (1 - yellowToRedRatio)); // Green decreases from 255 to 0
+                    const b = 0; // Keep blue at 0
+
+                    gradient.addColorStop(0, `rgb(${r},${g},${b})`); // Start color
+                    gradient.addColorStop(1, `rgb(255, 0, 0)`); // End color (deep red)
+
+                    ctx.fillStyle = gradient; // Set the gradient as the fill style
                     ctx.fillRect(
                         x,
                         centerY - barHeight / 2,
