@@ -120,7 +120,7 @@ function SolvePage() {
                         {question.choices.map((choice, index) => (
                             <div key={index}>
                                 <button
-                                    className={`p-3 w-full text-left flex items-center rounded-lg ${
+                                    className={`p-3 w-[75vw] text-left flex items-center rounded-lg ${
                                         selectedAnswer === index
                                             ? selectedAnswer === question.answer
                                                 ? "bg-blue-100 text-blue-600"
