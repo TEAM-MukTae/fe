@@ -33,8 +33,8 @@ function QuizPage() {
         }
     }, [location.state]);
 
-    const handleCardClick = (quizId: string) => {
-        navigate(`/quiz/${quizId}`);
+    const handleCardClick = (id: number) => {
+        navigate(`/quiz/${id}`, { state: { id } });
     };
 
     return (
@@ -57,7 +57,7 @@ function QuizPage() {
                     <Card
                         key={data.workbookId}
                         date="09.18"
-                        onClick={() => handleCardClick(`${data.workbookId}`)}
+                        onClick={() => handleCardClick(data.workbookId)}
                     >
                         {data.title}
                     </Card>

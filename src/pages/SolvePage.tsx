@@ -4,7 +4,7 @@ import Modal from "react-modal";
 import Card from "../components/display/Card";
 import Button from "../components/display/Button";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuizDetail } from "../hooks/useQuizDetail";
 import { useTranslation } from "react-i18next";
 
@@ -20,11 +20,12 @@ export interface Question {
 }
 
 function SolvePage() {
-    const { isLoading, isError, quizDetail } = useQuizDetail();
-    console.log(quizDetail);
-
     const navigate = useNavigate();
+    const location = useLocation();
     const { t } = useTranslation();
+    const { id } = location.state || {};
+
+    const { isLoading, isError, quizDetail } = useQuizDetail(id);
 
     const [totalQuestions, setTotalQuestions] = useState<number>(0);
     const [correctCount, setCorrectCount] = useState<number>(0);
