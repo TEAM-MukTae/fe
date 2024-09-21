@@ -79,18 +79,18 @@ const FeatureCards = () => {
     );
 };
 
-type Audio = {
+export interface Audio {
     id: number;
     title: string;
     keywords: string[];
     starred: boolean;
-};
+}
 
 function MainPage() {
     const { t } = useTranslation();
 
     const { isLoading, isError, audio } = useAudio();
-    console.log("audio", audio);
+    console.log("audio data", audio);
 
     const navigate = useNavigate();
 
@@ -111,19 +111,29 @@ function MainPage() {
             {isLoading && <div>{t("loading")}</div>}
             {isError && <div>{t("error_occurred")}</div>}
 
-            {Array.isArray(audio) &&
+            {Array.isArray(audio) && audio.length > 0 ? (
                 audio.map(({ id, title, keywords, starred }: Audio) => (
                     <Card
                         key={id}
-                        keyword={keywords}
-                        isStarred={starred}
-                        onClick={() =>
-                            navigate(`/recording/${id}`, { state: { id } })
+                        keyword={
+                            Array.isArray(keywords) && keywords.length > 0
+                                ? keywords
+                                : "No keywords"
                         }
+                        isStarred={starred}
+                        onClick={() => {
+                            console.log(
+                                `Navigating to recording with id: ${id}`,
+                            );
+                            navigate(`/recording/${id}`, { state: { id } });
+                        }}
                     >
-                        {title}{" "}
+                        {title}
                     </Card>
-                ))}
+                ))
+            ) : (
+                <div>No audio data available</div>
+            )}
         </div>
     );
 }
