@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 
 import { api } from "../config/axios";
 
-export const useAllAudio = () => {
-    const [allAudio, setAllAudio] = useState<number | null>(null);
+export const useAudio = () => {
+    const [audio, setAudio] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
 
@@ -13,7 +13,8 @@ export const useAllAudio = () => {
 
         api.get(`/audio`)
             .then((data) => {
-                setAllAudio(data.data.total_count);
+                setAudio(data.data);
+                console.log(data.data);
             })
             .catch(() => {
                 setIsError(true);
@@ -23,5 +24,5 @@ export const useAllAudio = () => {
             });
     }, []);
 
-    return { isLoading, isError, allAudio };
+    return { isLoading, isError, audio };
 };
