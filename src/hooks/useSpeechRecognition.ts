@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import axios from "axios";
+import { api } from "../config/axios";
+import i18n from "../i18n";
 
 // Web Speech API 관련 타입 정의
 interface SpeechRecognition extends EventTarget {
@@ -50,54 +53,55 @@ const useSpeechRecognition = () => {
         recognition.continuous = true;
         recognition.interimResults = true; // Enable interim results
 
-        recognition.onresult = (_: SpeechRecognitionEvent) => {
-            let finalTranscript = "";
-            for (let i = _.resultIndex; i < _.results.length; i++) {
-                if (_.results[i].isFinal) {
-                    finalTranscript += _.results[i][0].transcript + " ";
-                }
-            }
-            setTranscript((prev) => prev + finalTranscript); // 기존 transcript에 이어서 붙임
-        };
+        recognition.onresult = handleResult; // Use the handleResult function
         recognition.onend = () => {
             setIsListening(false);
         };
         recognitionRef.current = recognition;
+
         // 컴포넌트 언마운트 시 음성 인식 중지 (메모리 누수 방지)
         return () => {
             recognition.stop();
         };
     }, []);
-    useEffect(() => {
-        if (!("webkitSpeechRecognition" in window)) {
-            alert("이 브라우저는 Web Speech API를 지원하지 않습니다.");
-            return;
+
+    const handleResult = async (_: SpeechRecognitionEvent) => {
+        const promises = []; // Create an array to hold promises
+
+        for (let i = _.resultIndex; i < _.results.length; i++) {
+            if (_.results[i].isFinal) {
+                const finalTranscript = _.results[i][0].transcript;
+                promises.push(translateText(finalTranscript));
+            }
         }
 
-        const recognition = new (
-            window as any
-        ).webkitSpeechRecognition() as SpeechRecognition;
-        recognition.continuous = true;
-        recognition.interimResults = true; // Enable interim results
+        // Wait for all translation requests to complete
+        const translatedTexts = await Promise.all(promises);
+        const completeTranscript = translatedTexts.join(" "); // Combine all translated texts
 
-        recognition.onresult = (_: SpeechRecognitionEvent) => {
-            let finalTranscript = "";
-            for (let i = _.resultIndex; i < _.results.length; i++) {
-                if (_.results[i].isFinal) {
-                    finalTranscript += _.results[i][0].transcript + " ";
-                }
+        // Update transcript state
+        setTranscript((prev) => prev + completeTranscript + " ");
+    };
+
+    const translateText = async (text: string) => {
+        const lan = i18n.language === "zh" ? "zh-CN" : i18n.language;
+        const data = {
+            text: text,
+            target: lan,
+        };
+        if (lan !== "ko") {
+            try {
+                const res = await api.post("/translate", data);
+                return res.data; // Return the translated text
+            } catch (error) {
+                console.error("Translation error:", error);
+                return text; // If error, return the original text
             }
-            setTranscript((prev) => prev + finalTranscript); // 기존 transcript에 이어서 붙임
-        };
-        recognition.onend = () => {
-            setIsListening(false);
-        };
-        recognitionRef.current = recognition;
-        // 컴포넌트 언마운트 시 음성 인식 중지 (메모리 누수 방지)
-        return () => {
-            recognition.stop();
-        };
-    }, []);
+        } else {
+            return text;
+        }
+    };
+
     const startListening = useCallback(async () => {
         if (recognitionRef.current) {
             recognitionRef.current.start();
