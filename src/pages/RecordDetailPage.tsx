@@ -2,7 +2,8 @@ import { useLocation } from "react-router-dom";
 import { useAudioDetail } from "../hooks/useAudioDetail";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 
@@ -64,7 +65,16 @@ function RecordDetailPage() {
                 )}
 
                 {activeTab === "summary" && audioDetail && (
-                    <div className="mt-1">{audioDetail.summary}</div>
+                    <div className="mt-1">
+                        {audioDetail.summary.split("<br/>").map((p, index) => (
+                            <div key={index}>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {p}
+                                </ReactMarkdown>
+                                <br />
+                            </div>
+                        ))}
+                    </div>
                 )}
 
                 {activeTab === "summary" && !audioDetail && (
