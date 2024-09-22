@@ -8,6 +8,7 @@ interface CardProps {
     date?: string;
     isStarred?: boolean;
     isSelected?: boolean;
+    className?: string;
     onClick?: () => void;
 }
 
@@ -18,12 +19,13 @@ const Card: React.FC<CardProps> = ({
     isStarred,
     isSelected,
     onClick,
+    className,
 }) => {
     return (
         <div
             className={`flex items-center justify-between p-4 my-4 rounded-lg shadow-md ${
                 isSelected ? "bg-tertiary" : "bg-white"
-            }`}
+            } ${className}`}
             onClick={onClick}
         >
             <div className="flex items-center">

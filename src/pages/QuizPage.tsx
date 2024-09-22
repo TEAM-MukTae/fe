@@ -14,8 +14,8 @@ export interface QuizProps {
 
 function QuizPage() {
     const navigate = useNavigate();
-
     const location = useLocation();
+
     const [toast, setToast] = useState<boolean>(false);
     const [toastMessage, setToastMessage] = useState<string>("");
 
@@ -23,7 +23,10 @@ function QuizPage() {
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (location.state?.showToast) {
+        if (
+            location.state?.showToast &&
+            location.state?.from === "UploadPage"
+        ) {
             setToastMessage(location.state.toastMessage);
             setToast(true);
 
