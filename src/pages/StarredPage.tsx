@@ -1,29 +1,20 @@
+import { useTranslation } from "react-i18next";
+import { useQuiz } from "../hooks/useQuiz";
+import { useNavigate } from "react-router-dom";
+
 import TabBar from "../components/display/TabBar";
 import Card from "../components/display/Card";
-import bottom from "../assets/chevron-bottom.svg";
-import { useTranslation } from "react-i18next";
 
-const dummy = {
-    quiz: [
-        { quizId: 1, title: "인공지능 Ch1 퀴즈", date: "09.18", starred: true },
-        { quizId: 2, title: "인공지능 Ch2 퀴즈", date: "09.18", starred: true },
-        {
-            quizId: 3,
-            title: "인공지능 Ch3 퀴즈",
-            date: "09.18",
-            starred: true,
-        },
-        {
-            quizId: 4,
-            title: "인공지능 Ch4 퀴즈",
-            date: "09.18",
-            starred: true,
-        },
-    ],
-};
+import bottom from "../assets/chevron-bottom.svg";
 
 const StarredPage = () => {
+    const navigate = useNavigate();
     const { t } = useTranslation();
+    const { isLoading, isError, quiz } = useQuiz();
+
+    const handleCardClick = (id: number) => {
+        navigate(`/quiz/${id}`, { state: { id } });
+    };
 
     return (
         <div className="pt-5 pb-10">
@@ -32,15 +23,17 @@ const StarredPage = () => {
                 <img src={bottom} />
             </div>
 
-            {dummy.quiz.map((quiz) => (
-                <Card
-                    key={quiz.quizId}
-                    date={quiz.date}
-                    isStarred={quiz.starred}
-                >
-                    {quiz.title}
-                </Card>
-            ))}
+            {quiz &&
+                quiz.map((data) => (
+                    <Card
+                        key={data.workbookId}
+                        date="09.22"
+                        isStarred={true}
+                        onClick={() => handleCardClick(data.workbookId)}
+                    >
+                        {data.title}
+                    </Card>
+                ))}
 
             <TabBar />
         </div>

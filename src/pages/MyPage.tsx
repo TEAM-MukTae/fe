@@ -127,18 +127,18 @@ const MyPage = () => {
                 {activeTab === "activity" && (
                     <div>
                         <ul className="pl-5 list-disc">
-                            <li>인공지능 Ch1 퀴즈</li>
-                            <li>인공지능 Ch2 퀴즈</li>
-                            <li>인공지능 Ch3 퀴즈</li>
+                            <li>{t("myPage.quiz.ai1")}</li>
+                            <li>{t("myPage.quiz.ai2")}</li>
+                            <li>{t("myPage.quiz.ai3")}</li>
                         </ul>
                     </div>
                 )}
                 {activeTab === "saved" && (
                     <div>
                         <ul className="pl-5 list-disc">
-                            <li>인공지능 9/18 녹음</li>
-                            <li>인공지능 9/20 녹음</li>
-                            <li>인공지능 9/21 녹음</li>
+                            <li>{t("myPage.record.ai1")}</li>
+                            <li>{t("myPage.record.ai2")}</li>
+                            <li>{t("myPage.record.ai3")}</li>
                         </ul>
                     </div>
                 )}
