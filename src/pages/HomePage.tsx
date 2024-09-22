@@ -1,83 +1,15 @@
 import React, { CSSProperties } from "react";
-import { useTranslation } from "react-i18next";
 
-import Card from "../components/display/Card";
-import bottom from "../assets/chevron-bottom.svg";
-import { useAudio } from "../hooks/useAudio";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-interface FeatureCardProps {
-    backgroundColor: string;
-    title: string;
-    description: string;
-    icon: string;
-}
+import bottom from "../assets/chevron-bottom.svg";
+import logo from "../assets/logo.svg";
 
-const FeatureCard: React.FC<FeatureCardProps> = ({
-    backgroundColor,
-    title,
-    description,
-    icon,
-}) => (
-    <div
-        className={`rounded-lg p-4 text-white ${backgroundColor} w-40 h-40 flex flex-col flex-shrink-0 mr-4`}
-    >
-        <div className="text-sm">{title}</div>
-        <div className="text-sm">{description}</div>
-        <div className="mt-3 text-7xl text-end">{icon}</div>
-    </div>
-);
+import { useAudio } from "../hooks/useAudio";
 
-const FeatureCards = () => {
-    const { t } = useTranslation();
-
-    const features = [
-        {
-            backgroundColor: "bg-primary",
-            title: t("feature_cards.card1.title"),
-            description: t("feature_cards.card1.description"),
-            icon: "🦫",
-        },
-        {
-            backgroundColor: "bg-secondary",
-            title: t("feature_cards.card2.title"),
-            description: t("feature_cards.card2.description"),
-            icon: "🤖",
-        },
-        {
-            backgroundColor: "bg-tertiary",
-            title: t("feature_cards.card3.title"),
-            description: t("feature_cards.card3.description"),
-            icon: "🗣️",
-        },
-    ];
-
-    return (
-        <div
-            className="mb-6 overflow-x-auto"
-            style={{
-                msOverflowStyle: "none",
-                scrollbarWidth: "none",
-                WebkitOverflowScrolling: "touch",
-            }}
-        >
-            <div
-                className="flex pb-4"
-                style={
-                    {
-                        "::-webkit-scrollbar": {
-                            display: "none",
-                        },
-                    } as CSSProperties
-                }
-            >
-                {features.map((feature, index) => (
-                    <FeatureCard key={index} {...feature} />
-                ))}
-            </div>
-        </div>
-    );
-};
+import Card from "../components/display/Card";
+import FeatureCards from "../components/display/FeatureCard";
 
 export interface Audio {
     id: number;
@@ -96,11 +28,15 @@ function MainPage() {
 
     return (
         <div className="pb-10">
-            <div className="flex flex-row">
-                <div className="mr-2">아이콘</div>
-                <div className="mr-2">경북대학교 AI 학습 보조 플랫폼</div>
-            </div>
+            <div className="flex flex-row items-center mb-2">
+                <div className="mr-2">
+                    <img src={logo} />
+                </div>
 
+                <div className="text-gray-500">
+                    경북대학교 AI 학습 보조 플랫폼
+                </div>
+            </div>
             <FeatureCards />
 
             <div className="flex flex-row items-center justify-end">
@@ -122,9 +58,6 @@ function MainPage() {
                         }
                         isStarred={starred}
                         onClick={() => {
-                            console.log(
-                                `Navigating to recording with id: ${id}`,
-                            );
                             navigate(`/recording/${id}`, { state: { id } });
                         }}
                     >

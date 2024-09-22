@@ -11,22 +11,20 @@ interface SlideModalProps {
     saveAudio: () => Blob;
 }
 
-const CongratulationModal: React.FC = () => {
-    return (
-        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
-            <motion.div
-                className="bg-white p-6 rounded-lg shadow-lg text-center"
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.5, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-            >
-                <h2 className="text-2xl font-bold">🎉 축하합니다!</h2>
-                <p className="mt-2">녹음이 성공적으로 저장되었습니다!</p>
-            </motion.div>
-        </div>
-    );
-};
+const CongratulationModal: React.FC = () => (
+    <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+        <motion.div
+            className="bg-white p-6 rounded-lg shadow-lg text-center"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+        >
+            <h2 className="text-2xl font-bold">🎉 축하합니다!</h2>
+            <p className="mt-2">녹음이 성공적으로 저장되었습니다!</p>
+        </motion.div>
+    </div>
+);
 
 const SlideModal: React.FC<SlideModalProps> = ({
     isOpen,
@@ -38,7 +36,7 @@ const SlideModal: React.FC<SlideModalProps> = ({
     const [selectedLanguage, setSelectedLanguage] = useState("Korean");
     const [selectedTopic, setSelectedTopic] = useState("General");
     const [showCongratulation, setShowCongratulation] = useState(false);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,7 +47,6 @@ const SlideModal: React.FC<SlideModalProps> = ({
     const handleSave = async () => {
         try {
             const formData = new FormData();
-
             const recordRequest = {
                 title: recordingName,
                 text: transcript.trim(),
@@ -64,17 +61,12 @@ const SlideModal: React.FC<SlideModalProps> = ({
             const audioBlob = await saveAudio();
             formData.append("file", audioBlob, "recording.wav");
             const response = await api.post("/audio", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
+                headers: { "Content-Type": "multipart/form-data" },
             });
 
             console.log("Response:", response.data);
-
-            // Show congratulation modal
             setShowCongratulation(true);
 
-            // Hide after 3 seconds and navigate
             setTimeout(() => {
                 setShowCongratulation(false);
                 navigate("/");
@@ -116,9 +108,9 @@ const SlideModal: React.FC<SlideModalProps> = ({
                             <div className="flex items-center">
                                 <label
                                     htmlFor="recording-name"
-                                    className="mr-2 w-24 text-right"
+                                    className="mr-[0.7rem] w-24 text-right"
                                 >
-                                    녹음명:
+                                    녹음명
                                 </label>
                                 <input
                                     id="recording-name"
@@ -135,9 +127,9 @@ const SlideModal: React.FC<SlideModalProps> = ({
                             <div className="flex items-center">
                                 <label
                                     htmlFor="language"
-                                    className="mr-2 w-24 text-right"
+                                    className=" w-24 text-right mr-[1.5rem]"
                                 >
-                                    언어:
+                                    언어
                                 </label>
                                 <select
                                     id="language"
@@ -157,9 +149,9 @@ const SlideModal: React.FC<SlideModalProps> = ({
                             <div className="flex items-center">
                                 <label
                                     htmlFor="topic"
-                                    className="mr-2 w-24 text-right"
+                                    className=" w-24 text-right mr-[1.5rem]"
                                 >
-                                    주제:
+                                    주제
                                 </label>
                                 <select
                                     id="topic"
@@ -179,7 +171,7 @@ const SlideModal: React.FC<SlideModalProps> = ({
 
                         <button
                             onClick={handleSave}
-                            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-500 transition-colors duration-200"
+                            className="mt-6 bg-primary text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-500 transition-colors duration-200"
                         >
                             저장
                         </button>

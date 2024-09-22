@@ -67,6 +67,10 @@ i18n.use(initReactI18next).init({
                     selectFile: "Select File!",
                     upload: "Upload",
                     generateQuiz: "Generate Quiz",
+                    enterQuizTitle: "Quiz Title",
+                    quizTitlePlaceholder: "Set a quiz title.",
+                    save: "Save",
+                    quizGenerationSuccess: "Generated!",
                 },
             },
         },
@@ -75,15 +79,15 @@ i18n.use(initReactI18next).init({
                 recording: "음성녹음",
                 feature_cards: {
                     card1: {
-                        title: "이제 불편없이",
-                        description: "평등하게 학습하세요",
+                        title: "이제 언어 장벽없이",
+                        description: "학습하세요",
                     },
                     card2: {
-                        title: "인공지능 요약으로",
+                        title: "인공지능 요약 서비스로",
                         description: "학습 효율을 높이세요",
                     },
                     card3: {
-                        title: "기출문제를 통해",
+                        title: "퀴즈를 만들어서",
                         description: "복습하세요",
                     },
                 },
@@ -128,6 +132,10 @@ i18n.use(initReactI18next).init({
                     selectFile: "파일을 선택하세요.",
                     upload: "업로드",
                     generateQuiz: "퀴즈 생성하기",
+                    enterQuizTitle: "퀴즈명",
+                    quizTitlePlaceholder: "퀴즈 이름을 설정하세요.",
+                    save: "저장",
+                    quizGenerationSuccess: "퀴즈가 생성되었습니다!",
                 },
                 subLayout: {
                     recording: "AI 학습 보조",
@@ -201,6 +209,10 @@ i18n.use(initReactI18next).init({
                     selectFile: "请选择文件。",
                     upload: "上传",
                     generateQuiz: "生成测验",
+                    enterQuizTitle: "测验名称",
+                    quizTitlePlaceholder: "请设置测验名称。",
+                    save: "保存",
+                    quizGenerationSuccess: "测验已生成！",
                 },
                 subLayout: {
                     recording: "AI 学习辅助",
@@ -274,6 +286,10 @@ i18n.use(initReactI18next).init({
                     selectFile: "Vui lòng chọn tệp.",
                     upload: "Tải lên",
                     generateQuiz: "Tạo trắc nghiệm",
+                    enterQuizTitle: "Tên bài kiểm tra",
+                    quizTitlePlaceholder: "Hãy đặt tên cho bài kiểm tra.",
+                    save: "Lưu",
+                    quizGenerationSuccess: "Bài kiểm tra đã được tạo!",
                 },
                 subLayout: {
                     recording: "Hỗ trợ học tập AI",

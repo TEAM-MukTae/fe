@@ -1,11 +1,20 @@
 import { Router } from "./Router";
 import { BrowserRouter } from "react-router-dom";
+import {
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue,
+} from "recoil";
 
 function App() {
     return (
-        <BrowserRouter>
-            <Router />
-        </BrowserRouter>
+        <RecoilRoot>
+            <BrowserRouter>
+                <Router />
+            </BrowserRouter>
+        </RecoilRoot>
     );
 }
 

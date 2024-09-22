@@ -17,9 +17,7 @@ const RecordingPage = () => {
     const { transcript, startListening, stopListening, saveAudio, canvasRef } =
         useSpeechRecognition();
     const handleStopBtn = () => {
-        if (isRecording) {
-            setIsModalOpen(true);
-        }
+        setIsModalOpen(true);
     };
     const handleRecordToggle = () => {
         if (isRecording) {
@@ -43,7 +41,7 @@ const RecordingPage = () => {
                 </div>
 
                 {/* Visualizer and recording button area */}
-                <div className="mx-10 mb-2 z-10 items-center pl-5 pr-3 pt-4  bg-black border-t border-gray-200 rounded-2xl shadow-md w-280">
+                <div className="mx-10 mb-2 z-10 items-center pl-5 pr-3 pt-4  bg-black border-t border-gray-200 rounded-2xl shadow-md w-280 fixed bottom-0">
                     <div className=" items-center">
                         <div className="flex flex-row">
                             <div className="flex items-center justify-center w-15 h-15 rounded-full bg-slate-800 mr-4">
@@ -85,7 +83,7 @@ const RecordingPage = () => {
                         <div className="flex items-center justify-end">
                             <button
                                 onClick={() => handleStopBtn()}
-                                className="px-4 py-2 text-sm text-primary font-bold rounded"
+                                className="px-4 py-4 text-sm text-primary font-bold rounded"
                             >
                                 종료
                             </button>
