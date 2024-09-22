@@ -5,6 +5,7 @@ i18n.use(initReactI18next).init({
     resources: {
         en: {
             translation: {
+                main: "KNU AI Learning Assistant Platform",
                 recording: "Voice-Recording",
                 feature_cards: {
                     card1: {
@@ -72,10 +73,23 @@ i18n.use(initReactI18next).init({
                     save: "Save",
                     quizGenerationSuccess: "Generated!",
                 },
+                myPage: {
+                    quiz: {
+                        ai1: "AI Ch1 Quiz",
+                        ai2: "AI Ch2 Quiz",
+                        ai3: "AI Ch3 Quiz",
+                    },
+                    record: {
+                        ai1: "AI Recording 9/22 - 1",
+                        ai2: "AI Recording 9/22 - 2",
+                        ai3: "AI Recording 9/22 - 3",
+                    },
+                },
             },
         },
         ko: {
             translation: {
+                main: "경북대학교 AI 학습 보조 플랫폼",
                 recording: "음성녹음",
                 feature_cards: {
                     card1: {
@@ -150,10 +164,23 @@ i18n.use(initReactI18next).init({
                     record: "녹음",
                     createQuiz: "문제 생성",
                 },
+                myPage: {
+                    quiz: {
+                        ai1: "인공지능 Ch1 퀴즈",
+                        ai2: "인공지능 Ch2 퀴즈",
+                        ai3: "인공지능 Ch3 퀴즈",
+                    },
+                    record: {
+                        ai1: "인공지능 9/22 녹음-1",
+                        ai2: "인공지능 9/22 녹음-2",
+                        ai3: "인공지능 9/22 녹음-3",
+                    },
+                },
             },
         },
         zh: {
             translation: {
+                main: "庆北国立大学人工智能学习辅助平台",
                 recording: "录音",
                 feature_cards: {
                     card1: {
@@ -227,10 +254,23 @@ i18n.use(initReactI18next).init({
                     record: "录音",
                     createQuiz: "创建问题",
                 },
+                myPage: {
+                    quiz: {
+                        ai1: "AI 第1章 测验",
+                        ai2: "AI 第2章 测验",
+                        ai3: "AI 第3章 测验",
+                    },
+                    record: {
+                        ai1: "AI 录音 9/22 - 1",
+                        ai2: "AI 录音 9/22 - 2",
+                        ai3: "AI 录音 9/22 - 3",
+                    },
+                },
             },
         },
         vi: {
             translation: {
+                main: "Nền tảng Trợ lý Học tập AI Đại học Quốc gia Kyungpook",
                 recording: "ghi-âm",
                 feature_cards: {
                     card1: {
@@ -304,10 +344,23 @@ i18n.use(initReactI18next).init({
                     record: "Ghi âm",
                     createQuiz: "Tạo câu hỏi",
                 },
+                myPage: {
+                    quiz: {
+                        ai1: "Bài kiểm tra AI Ch1",
+                        ai2: "Bài kiểm tra AI Ch2",
+                        ai3: "Bài kiểm tra AI Ch3",
+                    },
+                    record: {
+                        ai1: "Ghi âm AI 9/22 - 1",
+                        ai2: "Ghi âm AI 9/22 - 2",
+                        ai3: "Ghi âm AI 9/22 - 3",
+                    },
+                },
             },
         },
         ru: {
             translation: {
+                main: "Платформа AI Ассистента для обучения Кенгбукского национального университета",
                 recording: "Запись звука",
                 feature_cards: {
                     card1: {
@@ -381,6 +434,18 @@ i18n.use(initReactI18next).init({
                     close: "Закрыть",
                     record: "Запись",
                     createQuiz: "Создать вопрос",
+                },
+                myPage: {
+                    quiz: {
+                        ai1: "Квиз AI Глава 1",
+                        ai2: "Квиз AI Глава 2",
+                        ai3: "Квиз AI Глава 3",
+                    },
+                    record: {
+                        ai1: "Запись AI 22.09 - 1",
+                        ai2: "Запись AI 22.09 - 2",
+                        ai3: "Запись AI 22.09 - 3",
+                    },
                 },
             },
         },

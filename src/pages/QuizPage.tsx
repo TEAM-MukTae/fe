@@ -59,7 +59,7 @@ function QuizPage() {
                 quiz.map((data) => (
                     <Card
                         key={data.workbookId}
-                        date="09.18"
+                        date="09.22"
                         onClick={() => handleCardClick(data.workbookId)}
                     >
                         {data.title}
