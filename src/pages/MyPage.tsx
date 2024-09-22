@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import languageState from "../context/atoms";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import profile from "../assets/profile.svg";
 
 const MyPage = () => {
-    const [activeTab, setActiveTab] = useState("activity");
     const { t, i18n } = useTranslation();
+
+    const setLanguage = useSetRecoilState(languageState);
+    const language = useRecoilValue(languageState);
+
+    const [activeTab, setActiveTab] = useState("activity");
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    const changeLanguage = (lang: string) => {
+    const onChangeLanguage = (lang: string) => {
         i18n.changeLanguage(lang);
         setDropdownOpen(false);
+        setLanguage(lang);
     };
 
     const languageMap: Record<string, string> = {
@@ -40,32 +48,32 @@ const MyPage = () => {
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                             className="px-4 py-2 transition bg-white border rounded-md shadow"
                         >
-                            {languageMap[i18n.language] || t("select_language")}
+                            {languageMap[language] || t("select_language")}
                         </button>
 
                         {dropdownOpen && (
                             <div className="absolute mt-2  w-[120px] bg-white border rounded shadow-md">
                                 <button
                                     className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-                                    onClick={() => changeLanguage("ko")}
+                                    onClick={() => onChangeLanguage("ko")}
                                 >
                                     한국어
                                 </button>
                                 <button
                                     className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-                                    onClick={() => changeLanguage("en")}
+                                    onClick={() => onChangeLanguage("en")}
                                 >
                                     English
                                 </button>
                                 <button
                                     className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-                                    onClick={() => changeLanguage("zh")}
+                                    onClick={() => onChangeLanguage("zh")}
                                 >
                                     中文
                                 </button>
                                 <button
                                     className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-                                    onClick={() => changeLanguage("vi")}
+                                    onClick={() => onChangeLanguage("vi")}
                                 >
                                     Tiếng Việt
                                 </button>

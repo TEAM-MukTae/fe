@@ -3,8 +3,8 @@ import React, { useState, useRef } from "react";
 import { useAudio } from "../hooks/useAudio";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useRecoilValue } from "recoil";
 
-import ToastPopup from "../components/display/ToastPopup";
 import Card from "../components/display/Card";
 import Button from "../components/display/Button";
 import SlideModal from "../components/display/SlideModal2";
@@ -13,10 +13,12 @@ import upload from "../assets/upload.svg";
 
 import { Audio } from "../pages/HomePage";
 import { api } from "../config/axios";
+import languageState from "../context/atoms";
 
 export default function UploadPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const language = useRecoilValue(languageState);
 
     const { isLoading, isError, audio } = useAudio();
 
@@ -54,16 +56,6 @@ export default function UploadPage() {
         }
     };
 
-    const handleGenerateQuiz = () => {
-        // if (selectedCardIds.length === 0 || !fileName) {
-        //     setToastMessage(t("uploadPage.selectFile"));
-        //     setToast(true);
-        //     return;
-        // }
-
-        setOpenModal(true);
-    };
-
     const handleSubmit = async () => {
         if (!quizTitle.trim()) {
             setToastMessage(t("uploadPage.enterTitle"));
@@ -72,6 +64,8 @@ export default function UploadPage() {
         }
 
         const formData = new FormData();
+        formData.append("language", language);
+
         const quizRequest = {
             title: quizTitle,
             idList: selectedCardIds,
@@ -175,7 +169,7 @@ export default function UploadPage() {
                             type="file"
                             id="fileElem"
                             multiple
-                            accept=".pdf, .jpg, .jpeg, .png, .ppt, .pptx"
+                            accept=".pdf"
                             className="hidden"
                             onChange={handleFileChange}
                         />
@@ -187,7 +181,7 @@ export default function UploadPage() {
                 <Button
                     width="100px"
                     height="10px"
-                    onClick={handleGenerateQuiz}
+                    onClick={() => setOpenModal(true)}
                 >
                     {t("uploadPage.generateQuiz")}
                 </Button>
