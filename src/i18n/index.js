@@ -79,15 +79,15 @@ i18n.use(initReactI18next).init({
                 recording: "음성녹음",
                 feature_cards: {
                     card1: {
-                        title: "이제 불편없이",
-                        description: "평등하게 학습하세요",
+                        title: "이제 언어 장벽없이",
+                        description: "학습하세요",
                     },
                     card2: {
-                        title: "인공지능 요약으로",
+                        title: "인공지능 요약 서비스로",
                         description: "학습 효율을 높이세요",
                     },
                     card3: {
-                        title: "기출문제를 통해",
+                        title: "퀴즈를 만들어서",
                         description: "복습하세요",
                     },
                 },

@@ -28,14 +28,15 @@ function MainPage() {
 
     return (
         <div className="pb-10">
-            <div className="flex flex-row mb-2">
+            <div className="flex flex-row items-center mb-2">
                 <div className="mr-2">
                     <img src={logo} />
                 </div>
 
-                <div className="mr-2">경북대학교 AI 학습 보조 플랫폼</div>
+                <div className="text-gray-500">
+                    경북대학교 AI 학습 보조 플랫폼
+                </div>
             </div>
-
             <FeatureCards />
 
             <div className="flex flex-row items-center justify-end">

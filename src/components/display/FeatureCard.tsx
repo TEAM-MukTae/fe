@@ -5,9 +5,6 @@ const animationStyles = {
     bounce: {
         animation: "bounce 2s infinite",
     },
-    rotate: {
-        animation: "rotate 3s linear infinite",
-    },
     wave: {
         animation: "wave 2.5s infinite",
     },
@@ -41,7 +38,7 @@ interface FeatureCardProps {
     title: string;
     description: string;
     icon: string;
-    animationType: "bounce" | "rotate" | "wave";
+    animationType: "bounce" | "wave";
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
@@ -59,7 +56,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 
     return (
         <div
-            className={`rounded-md p-4 text-white w-40 h-40 flex flex-col flex-shrink-0 mr-4 transition-opacity duration-500 ${backgroundColor}`}
+            className={`rounded-md p-4 text-white w-40 h-40 sm:w-56 sm:h-56 flex flex-col flex-shrink-0 mr-4 transition-opacity duration-500 ${backgroundColor}`}
             style={{
                 opacity: isVisible ? 1 : 0,
             }}
@@ -92,7 +89,7 @@ const FeatureCards = () => {
             title: t("feature_cards.card2.title"),
             description: t("feature_cards.card2.description"),
             icon: "🤖",
-            animationType: "rotate" as const,
+            animationType: "bounce" as const,
         },
         {
             backgroundColor: "bg-tertiary",
