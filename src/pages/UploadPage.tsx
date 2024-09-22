@@ -19,6 +19,7 @@ export default function UploadPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const language = useRecoilValue(languageState);
+    console.log(language);
 
     const { isLoading, isError, audio } = useAudio();
 
@@ -64,11 +65,11 @@ export default function UploadPage() {
         }
 
         const formData = new FormData();
-        formData.append("language", language);
 
         const quizRequest = {
             title: quizTitle,
             idList: selectedCardIds,
+            language: language,
         };
         formData.append(
             "quizRequest",
@@ -100,6 +101,7 @@ export default function UploadPage() {
                 state: {
                     showToast: true,
                     toastMessage: t("uploadPage.quizGenerationSuccess"),
+                    from: "UploadPage",
                 },
             });
         } catch (error) {

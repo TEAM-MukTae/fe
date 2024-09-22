@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import star from "../../assets/star.svg";
+import unstar from "../../assets/star-line.svg";
 
 interface CardProps {
     children: React.ReactNode;
@@ -7,6 +8,7 @@ interface CardProps {
     keyword?: string[] | string;
     date?: string;
     isStarred?: boolean;
+    setIsStarred?: () => void;
     isSelected?: boolean;
     className?: string;
     onClick?: () => void;
@@ -17,6 +19,7 @@ const Card: React.FC<CardProps> = ({
     keyword,
     date,
     isStarred,
+    setIsStarred,
     isSelected,
     onClick,
     className,
@@ -29,7 +32,7 @@ const Card: React.FC<CardProps> = ({
             onClick={onClick}
         >
             <div className="flex items-center">
-                <div>
+                <div className="flex-1">
                     <p className="font-medium text-gray-900">{children}</p>
                     <p className="text-sm text-gray-600">{date}</p>
 
