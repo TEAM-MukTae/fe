@@ -22,6 +22,7 @@ export interface Question {
 function SolvePage() {
     const navigate = useNavigate();
     const location = useLocation();
+
     const { t } = useTranslation();
     const { id } = location.state || {};
 
@@ -32,12 +33,13 @@ function SolvePage() {
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-    const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
+    const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(
+        new Set(),
+    );
 
     useEffect(() => {
         if (quizDetail) {
             setTotalQuestions(quizDetail.length);
-            console.log("sovle", quizDetail.length);
         }
     }, [quizDetail]);
 
@@ -111,7 +113,7 @@ function SolvePage() {
             </div>
 
             <div>
-                <Card>
+                <Card className="w-full max-w-lg mx-auto">
                     <div className="mb-4 text-lg font-semibold">
                         {currentQuestion + 1}. {question.query}
                     </div>
@@ -120,7 +122,7 @@ function SolvePage() {
                         {question.choices.map((choice, index) => (
                             <div key={index}>
                                 <button
-                                    className={`p-3 w-[75vw] text-left flex items-center rounded-lg ${
+                                    className={`p-3 w-[300px] md:w-[200px] text-left flex items-center rounded-lg ${
                                         selectedAnswer === index
                                             ? selectedAnswer === question.answer
                                                 ? "bg-blue-100 text-blue-600"
