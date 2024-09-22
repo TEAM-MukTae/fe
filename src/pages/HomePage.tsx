@@ -48,7 +48,26 @@ function MainPage() {
             {isError && <div>{t("error_occurred")}</div>}
 
             {Array.isArray(audio) && audio.length > 0 ? (
-                audio.map(({ id, title, keywords, starred }: Audio) => (
+                // audio.map(({ id, title, keywords, starred }: Audio) => (
+                //     <Card
+                //         key={id}
+                //         keyword={
+                //             Array.isArray(keywords) && keywords.length > 0
+                //                 ? keywords
+                //                 : "No keywords"
+                //         }
+                //         isStarred={starred}
+                //         onClick={() => {
+                //             navigate(`/recording/${id}`, { state: { id } });
+                //         }}
+                //     >
+                //         {title}
+                //     </Card>
+                // ))
+                audio
+                .slice() // To avoid mutating the original array
+                .reverse()
+                .map(({ id, title, keywords, starred }: Audio) => (
                     <Card
                         key={id}
                         keyword={
@@ -63,7 +82,8 @@ function MainPage() {
                     >
                         {title}
                     </Card>
-                ))
+                ));
+
             ) : (
                 <div>No audio data available</div>
             )}
