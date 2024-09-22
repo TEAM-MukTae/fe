@@ -155,11 +155,21 @@ const useSpeechRecognition = () => {
             }
         }
     }, []);
-
     const saveAudio = () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
         setAudioChunks([]); // Clear the chunks after saving
-        return audioBlob; // Return the Blob for further processing
+
+        // Create a download link
+        const url = URL.createObjectURL(audioBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "recording.webm"; // Set the file name for download
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a); // Clean up the DOM
+        URL.revokeObjectURL(url); // Free up memory by revoking the URL
+
+        return audioBlob; // Return the Blob for further processing if needed
     };
 
     // Visualizer logic
@@ -204,22 +214,21 @@ const useSpeechRecognition = () => {
                     const maxBarHeight = HEIGHT * 0.5; // Max height is 50% of the canvas height
                     barHeight = Math.min(barHeight, maxBarHeight);
 
-                    // Create a gradient for each bar from yellow to red
+                    // Create a gradient for each bar
                     const gradient = ctx.createLinearGradient(
                         x,
                         centerY - barHeight / 2,
                         x,
                         centerY + barHeight / 2,
                     );
-
-                    // Calculate the color stop based on the index
-                    const yellowToRedRatio = i / bufferLength;
-                    const r = Math.floor(255 * yellowToRedRatio); // Red increases from 0 to 255
-                    const g = Math.floor(255 * (1 - yellowToRedRatio)); // Green decreases from 255 to 0
-                    const b = 0; // Keep blue at 0
-
-                    gradient.addColorStop(0, `rgb(${r},${g},${b})`); // Start color
-                    gradient.addColorStop(1, `rgb(255, 0, 0)`); // End color (deep red)
+                    gradient.addColorStop(
+                        0,
+                        `hsl(${(i / bufferLength) * 360}, 100%, 50%)`,
+                    ); // Start color
+                    gradient.addColorStop(
+                        1,
+                        `hsl(${(i / bufferLength) * 360}, 100%, 30%)`,
+                    ); // End color
 
                     ctx.fillStyle = gradient; // Set the gradient as the fill style
                     ctx.fillRect(
