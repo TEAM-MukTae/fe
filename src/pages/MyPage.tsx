@@ -25,6 +25,7 @@ const MyPage = () => {
         en: "English",
         zh: "中文",
         vi: "Tiếng Việt",
+        ru: "Русский",
     };
 
     return (
@@ -76,6 +77,12 @@ const MyPage = () => {
                                     onClick={() => onChangeLanguage("vi")}
                                 >
                                     Tiếng Việt
+                                </button>
+                                <button
+                                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                                    onClick={() => onChangeLanguage("ru")}
+                                >
+                                    Русский
                                 </button>
                             </div>
                         )}
